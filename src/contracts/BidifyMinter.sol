@@ -3,48 +3,56 @@ pragma solidity ^0.8.4;
 
 import "./BidifyToken.sol";
 
-contract BidifyMinter is BidifyToken {
+contract BidifyMinter {
     BidifyToken public tokenAddress;
-    uint256 public mintCost = 1e16;
-    address public devWallet;
-    uint256 private totalAmount;
+    address public dev;
+    address public admin;
 
     constructor() {
         tokenAddress = new BidifyToken();
-        devWallet = msg.sender;
+        dev = msg.sender;
+        admin = msg.sender;
+    }
+
+    modifier onlyManager() {
+        require(msg.sender == dev, "only admin!");
+        _;
+    }
+
+    function calculateCost(uint amount) public pure returns(uint cost) {
+        if(amount < 10) cost = 1e17;
+        else if(amount < 100) cost = 1e18;
+        else cost = 1e19;
     }
     
-    function mint(string memory uri) external payable {
-        require(msg.value >= mintCost, "Minting fee is lower than price!");
-        totalAmount += msg.value;
-        // uint mintFee = msg.value;
-        // payable(adminWallet).call()
-        tokenAddress.safeMint(msg.sender, uri);
-    }
-
     function multipleMint(string memory uri, uint8 count) external payable {
-        require(msg.value >= mintCost * count, "Minting fee is lower than price");
+        require(count <= 50, "Minting amount can't be over 50!");
+        uint256 mintCost = calculateCost(count);
+        require(msg.value >= mintCost, "Minting fee is lower than price");
         for(uint8 i = 0; i < count; i ++) {
-            totalAmount += msg.value;
-            tokenAddress.safeMint(msg.sender, uri);
+            BidifyToken(tokenAddress).safeMint(msg.sender, uri);
         }
-    }
-
-    function setDevWallet(address to) external onlyOwner {
-        devWallet = to;
-    }
-
-    function setMintCost(uint256 _value) external onlyOwner {
-        mintCost = _value;
-    }
-
-    function withdraw() external onlyOwner {
-        uint256 ownerFee = totalAmount / 2;
-        (bool succeedOwner, ) = payable(msg.sender).call{value: ownerFee}("");
+        uint256 _cost = msg.value;
+        uint256 ownerFee = _cost / 2;
+        (bool succeedOwner, ) = payable(admin).call{value: ownerFee}("");
         require(succeedOwner, "Failed to withdraw to the owner");
-        totalAmount -= ownerFee;
-        (bool succeedDev, ) = payable(devWallet).call{value: totalAmount}("");
+        _cost -= ownerFee;
+        (bool succeedDev, ) = payable(dev).call{value: _cost}("");
         require(succeedDev, "Failed to withdraw to the dev");
-        totalAmount = 0;
+        _cost = 0;
+    }
+
+    function setdev(address to) external onlyManager {
+        dev = to;
+    }
+
+    function setAdmin(address to) external onlyManager {
+        admin = to;
+    }
+
+    function withdraw() external onlyManager {
+        uint256 amount = address(this).balance;
+        (bool succeedOwner, ) = payable(msg.sender).call{value: amount}("");
+        require(succeedOwner, "Failed to withdraw to the owner");
     }
 }

@@ -12,7 +12,7 @@ import { useWeb3React } from "@web3-react/core"
 import { FetchWrapper } from "use-nft";
 import { injected } from "../connectors"
 import { switchNetwork } from "../wallet"
-import { addresses, ABI, NETWORKS, supportedChainIds, TOKEN_DECIMALS, TOKEN_SYMBOL, explorer, BIDIFY, getLogUrl, snowApi, baseUrl } from "../constants"
+import { addresses, ABI, NETWORKS, supportedChainIds, TOKEN_DECIMALS, TOKEN_SYMBOL, explorer, BIDIFY, getLogUrl, snowApi, baseUrl, platforms, ERC721_ABI } from "../constants"
 import { ethers, Contract } from "ethers"
 import { Buffer } from "buffer"
 import axios from "axios"
@@ -22,7 +22,8 @@ const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 const modalContents = {
     ipfs: "Uploading data to the IPFS...",
     mint: "Minting NFTs...",
-    list: "Creating Auctions..."
+    database: "Adding to database...",
+    list: "Creating Auctions... \nThis will take a few minutes and you should to confirm transactions several times."
 }
 
 export const Home = () => {
@@ -32,8 +33,8 @@ export const Home = () => {
     const [description, setDescription] = useState()
     const [amount, setAmount] = useState(1)
     const [forSale, setForSale] = useState(false)
-    const [bid, setBid] = useState()
-    const [duration, setDuration] = useState()
+    const [bid, setBid] = useState(0)
+    const [duration, setDuration] = useState(0)
     const [type, setType] = useState()
     const [loading, setLoading] = useState(false)
     const [approving, setApproving] = useState(false)
@@ -109,7 +110,6 @@ export const Home = () => {
     const readImage = event => {
         event.preventDefault()
         const file = event.target.files[0]
-        // console.log(file)
         const reader = new window.FileReader()
         reader.readAsArrayBuffer(file)
         reader.onloadend = () => {
@@ -125,40 +125,54 @@ export const Home = () => {
         try {
             const ret = await axios.get(`${getLogUrl[chainId]}&fromBlock=0&toBlock=latest&address=${BIDIFY.address[chainId]}&topic0=${topic0}&apikey=${snowApi[chainId]}`)
             logs = ret.data.result
-            // console.log(ret)
         } catch (e) {
             console.log(e.message)
         }
         return logs ? logs.length : 0;
     };
     const checkAllowd = async () => {
-        const BidifyToken = new ethers.Contract(addresses[chainId], ABI, library.getSigner())
+        const BidifyToken = new ethers.Contract(platforms[chainId], ERC721_ABI, library.getSigner())
         const allowed = await BidifyToken.isApprovedForAll(account, BIDIFY.address[chainId])
         setApproved(allowed)
     }
     const signList = async () => {
         setApproving(true)
-        try{
-            const BidifyToken = new ethers.Contract(addresses[chainId], ABI, library.getSigner())
-            await BidifyToken.setApprovalForAll(BIDIFY.address[chainId], true)
+        try {
+            const BidifyToken = new ethers.Contract(platforms[chainId], ERC721_ABI, library.getSigner())
+            const tx = await BidifyToken.setApprovalForAll(BIDIFY.address[chainId], true)
+            await tx.wait()
             await checkAllowd()
             setApproving(false)
         } catch (e) {
             setApproving(false)
             console.log(e.message)
         }
-        
+
+    }
+    const addToDatabase = async (data, forSale) => {
+        try {
+            if (forSale) {
+                console.log("posting for sale...")
+                const ret = await axios.post(`${baseUrl}/admin`, data)
+                console.log("return", ret)
+            } else {
+                console.log("posting for minting...")
+                const ret = await axios.post(`${baseUrl}/adminCollection`, data)
+                console.log("return", ret)
+            }
+        } catch (error) {
+            return console.log("adding database error", error)
+        }
     }
     const list = async (token, price, days) => {
         const currency = "0x0000000000000000000000000000000000000000";
-        const platform = addresses[chainId];
+        const platform = platforms[chainId];
         const Bidify = new ethers.Contract(
             BIDIFY.address[chainId],
             BIDIFY.abi,
             library.getSigner()
         );
         try {
-            const totalCount = await getLogs()
             const tx = await Bidify
                 .list(
                     currency,
@@ -170,17 +184,7 @@ export const Home = () => {
                     false,
                     true,
                 )
-            const det = await tx.wait()
-            while (await getLogs() === totalCount) {
-                console.log("while loop")
-            }
-            // console.log("listed results", tx, det)
-            // const listCnt = await getLogs()
-            // console.log("total Count")
-            const newId = totalCount
-            const listingDetail = await getDetailFromId(newId)
-            console.log("adding to database", listingDetail)
-            await axios.post(`${baseUrl}/auctions`, listingDetail)
+            await tx.wait()
         } catch (error) {
             return console.log("list error", error)
         }
@@ -206,7 +210,7 @@ export const Home = () => {
         let currentBid = raw.price;
         let nextBid = await bidify.getNextBid(id);
         let decimals = 18;
-        if (currentBid === nextBid) {
+        if (currentBid.toString() === nextBid.toString()) {
             currentBid = null;
         } else {
             currentBid = ethers.utils.formatEther(currentBid);
@@ -361,32 +365,57 @@ export const Home = () => {
                 image: `https://ipfs.io/ipfs/${result.path}`
             }
             const added = await ipfs.add(Buffer(JSON.stringify(tokenURI)))
+            const dataToDatabase = {
+                description: description,
+                image: `https://dweb.link/ipfs/${result.path}`,
+                metadataUrl: `https://api.allorigins.win/raw?url=https%3A%2F%2Fipfs.io%2Fipfs%2F${added.path}`,
+                name: name,
+                owner: account,
+                platform: addresses[chainId],
+                network: chainId,
+                isERC721: true,
+            }
             const tokenURIJson = `https://ipfs.io/ipfs/${added.path}`
-            console.log(tokenURIJson)
             setModalContent("mint")
             const signer = library.getSigner()
             const BidifyMinter = new ethers.Contract(addresses[chainId], ABI, signer)
-            // return console.log(myBalance)
             const mintCost = await BidifyMinter.calculateCost(amount)
-            console.log(mintCost.toString())
-            const tx = await BidifyMinter.multipleMint(tokenURIJson.toString(), amount, { value: mintCost })
+            const tx = await BidifyMinter.multipleMint(tokenURIJson.toString(), amount, { value: mintCost, from: account })
             const txHash = await tx.wait()
             // await signList()
             setTransaction(txHash.transactionHash)
+            const tokenIds = txHash.events.map((event) => {
+                const hex = event.topics[3]
+                return Number(ethers.utils.hexValue(hex))
+            })
+            // setModalContent("database")
             if (forSale) {
-                const tokenIds = txHash.events.map((event) => {
-                    return event.args.tokenId
-                })
-                setModalContent("list")
-                try {
-                    for (let i = 0; i < tokenIds.length; i++) {
-                        await list(tokenIds[i].toString(), bid, duration)
-                        console.log("listed Id", tokenIds[i].toString())
-                    }
-                    console.log("listed counts", tokenIds)
-                } catch (e) {
-                    console.log("listing error", e)
+                setModalContent("list");
+                
+                const totalCount = await getLogs()
+                for (let i = 0; i < tokenIds.length; i++) {
+                    await list(tokenIds[i].toString(), bid, duration)
                 }
+                while (await getLogs() === totalCount) {
+                    console.log("while loop")
+                }
+                setModalContent("database")
+                const pData = []
+                for (let i = 0; i < tokenIds.length; i++) {
+                    const listingDetail = getDetailFromId((i + totalCount).toString());
+                    pData.push(listingDetail)
+                }
+                const data = await Promise.all(pData);
+                console.log("listed data", data)
+                await addToDatabase(data, forSale)
+            }
+            else {
+                setModalContent("database")
+                const data = []
+                for (let i = 0; i < tokenIds.length; i++) {
+                    data.push({ ...dataToDatabase, token: tokenIds[i].toString() })
+                }
+                await addToDatabase(data, forSale)
             }
             setShowAlert(true)
             setLoading(false);

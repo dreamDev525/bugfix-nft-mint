@@ -15,9 +15,14 @@ export const NetworkId = {
 export const supportedChainIds = [1, 4, 137, 43114, 1987]
 export const addresses = {
   [NetworkId.POLYGON]: "",
-  [NetworkId.RINKEBY]: "0x1cA75B685f8B05c03Fee2F23B97E150167F186A9",
-  [NetworkId.ETHERGEM]: "0x6dBB026641Ffc14cFfFFB69da51baA38F04fF40b"
+  [NetworkId.RINKEBY]: "0x3521750B9abda780854C570e83624aCB1EB7afe7",
+  [NetworkId.ETHERGEM]: "0xA625e8A998a78a2619Da38E656fA61AcEb45439a"
 };
+export const platforms = {
+  [NetworkId.POLYGON]: "",
+  [NetworkId.RINKEBY]: "0x3521750B9abda780854C570e83624aCB1EB7afe7",
+  [NetworkId.ETHERGEM]: "0x43dF4869458f2B81782cE29951d057253a68Ffc6"
+}
 export const explorer = {
   [NetworkId.POLYGON]: "",
   [NetworkId.RINKEBY]: "https://rinkeby.etherscan.io",
@@ -68,6 +73,123 @@ export const NETWORKS = {
 };
 
 export const ABI = [
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "admin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "calculateCost",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "cost",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "dev",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
+      },
+      {
+        "internalType": "uint8",
+        "name": "count",
+        "type": "uint8"
+      }
+    ],
+    "name": "multipleMint",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "setAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "setdev",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tokenAddress",
+    "outputs": [
+      {
+        "internalType": "contract BidifyToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
+
+export const ERC721_ABI = [
   {
     "inputs": [],
     "stateMutability": "nonpayable",
@@ -208,38 +330,6 @@ export const ABI = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "calculateCost",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "cost",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "devWallet",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
@@ -277,24 +367,6 @@ export const ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "uri",
-        "type": "string"
-      },
-      {
-        "internalType": "uint8",
-        "name": "count",
-        "type": "uint8"
-      }
-    ],
-    "name": "multipleMint",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -439,19 +511,6 @@ export const ABI = [
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
-    ],
-    "name": "setDevWallet",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "bytes4",
         "name": "interfaceId",
         "type": "bytes4"
@@ -532,13 +591,6 @@ export const ABI = [
       }
     ],
     "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
