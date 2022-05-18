@@ -2,6 +2,7 @@ import eth from "./assets/images/eth.png"
 import matic from "./assets/images/matic.png"
 import avax from "./assets/images/avax.png"
 import egem from "./assets/images/egem.png"
+import bnb from "./assets/images/bnb.jpg"
 
 export const NetworkId = {
   POLYGON: 137,
@@ -10,20 +11,23 @@ export const NetworkId = {
   ETHEREUM: 1,
   ETHERGEM: 1987,
   AVALANCHE: 43114,
+  BSC: 56
   // FUJI: 43113,
 };
-export const supportedChainIds = [1, 4, 137, 43114, 1987]
+export const supportedChainIds = [1, 4, 56, 137, 43114, 1987]
 export const addresses = {
   [NetworkId.POLYGON]: "0x683F246253934862B86b042476837a5e9B91E326",
   [NetworkId.RINKEBY]: "0x0f79f4239F343fc932F357eFAAeE405a90d28e42",
   [NetworkId.ETHERGEM]: "0x5A4Aa5B8f54763A22A7bE54F30Be650fe040b8eA",
-  [NetworkId.AVALANCHE]: "0x3c786F6A34EdfcabCC366025344c25C76Bc52434"
+  [NetworkId.AVALANCHE]: "0x0a8D5435a43c8d63b47D6E61F5eE88868A1b8Ed9",
+  [NetworkId.BSC]: "0xf19654453a8beCbA43AeDEAEf24187E6341fE511"
 };
 export const standard = {
   [NetworkId.POLYGON]: "0x78A46265BedEfF1f18C3696dB01669A76B7833C8",
   [NetworkId.RINKEBY]: "0xFe4317e87958f5b408aF9d8fFf78F228435fd0C8",
   [NetworkId.ETHERGEM]: "0xf3195693ddb32822cdf759305a91b674ab1382e1",
-  [NetworkId.AVALANCHE]: "0x3c786F6A34EdfcabCC366025344c25C76Bc52434"
+  [NetworkId.AVALANCHE]: "0x0603347E9f803D28b59B8346480b1a43a11eE100",
+  [NetworkId.BSC]: "0xD654C3Cd5a2ff2F19ba825498E945Cd497A9f8bB"
 }
 // export const platforms = {
 //   [NetworkId.POLYGON]: "0x175bc1bACF1fc054A5CA30AdeC155f00AaA2ce06",
@@ -35,7 +39,8 @@ export const explorer = {
   [NetworkId.POLYGON]: "https://polygonscan.com/",
   [NetworkId.RINKEBY]: "https://rinkeby.etherscan.io",
   [NetworkId.ETHERGEM]: "https://blockscout.egem.io/",
-  [NetworkId.AVALANCHE]: "https://snowtrace.io/"
+  [NetworkId.AVALANCHE]: "https://snowtrace.io/",
+  [NetworkId.BSC]: "https://bscscan.com/"
 }
 
 /**
@@ -73,6 +78,11 @@ export const NETWORKS = {
     label: "Avalanche",
     chainId: 43114
   },
+  [NetworkId.BSC]: {
+    image: bnb,
+    label: "Binance Smart Chain",
+    chainId: 56,
+  }
   // [NetworkId.FUJI]: {
   //   image: avax,
   //   label: "Avalanche Fuji",
@@ -1293,10 +1303,12 @@ export const getLogUrl = {
   137: "https://api.polygonscan.com/api?module=logs&action=getLogs",
   43114: "https://api.snowtrace.io/api?module=logs&action=getLogs",
   4: "https://api-rinkeby.etherscan.io/api?module=logs&action=getLogs",
-  1987: "https://blockscout.egem.io/api?module=logs&action=getLogs"
+  1987: "https://blockscout.egem.io/api?module=logs&action=getLogs",
+  56: "https://api.bscscan.com/api?module=logs&action=getLogs"
 }
 export const snowApi = {
   43114: "Y72B4EMH42SYS5C3RGGIDJM9HPQKYUSUTH",
   137: "XKIRV2YEWTDJIXRQSXB42PT78P1879NTJT",
-  4: "1GT2QR7K76T2EAU72UEP43M82W72TMQAU6"
+  4: "1GT2QR7K76T2EAU72UEP43M82W72TMQAU6",
+  56: "WYSBB1UFVWFNRVRMCRZ6PMI5XD3K1D2A9F"
 }

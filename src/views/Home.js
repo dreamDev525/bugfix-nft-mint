@@ -165,6 +165,8 @@ export const Home = () => {
             case 43113: case 43114:
                 // return avaxLogo
                 return "AVAX"
+            case 56:
+                return "BNB"
             default: return "Currency"
         }
     }
@@ -441,7 +443,7 @@ export const Home = () => {
 
             const BidifyMinter = new ethers.Contract(addresses[chainId], ABI, signer)
             const collections = await BidifyMinter.getCollections()
-            console.log("collections ", collections[0])
+            console.log("collections ", collections)
             setCollections(collections)
         } catch (e) {
             setToast(e.message)
@@ -504,7 +506,7 @@ export const Home = () => {
             }
             console.log(txHash.events)
             let tokenIds = []
-            if (chainId === 4) {
+            if (chainId === 4 || chainId === 43114 || chainId === 56) {
                 tokenIds = txHash.events.map((event) => {
                     const hex = event.topics[3]
                     return Number(ethers.utils.hexValue(hex))
@@ -571,12 +573,13 @@ export const Home = () => {
             if (collections[i].name === collectionName) {
                 exist = true;
                 setSymbol(collections[i].symbol)
-                setErc721(collections[i].platform)
-                checkAllowd(collections[i].platform)
+                if(chainId !== 56) setErc721(collections[i].platform)
+                if(chainId !== 56) checkAllowd(collections[i].platform)
             }
         }
         if (exist) {
             setSymbolEditable(false)
+            if(chainId === 56) setForSale(false)
         }
         else {
             setSymbolEditable(true)
@@ -591,7 +594,7 @@ export const Home = () => {
         setOpenCollection(false)
         setCollectionName(item.name)
         setSymbol(item.symbol)
-        setErc721(item.platform)
+        if(chainId !== 56) setErc721(item.platform)
     }
     return (
         <div>
@@ -610,7 +613,7 @@ export const Home = () => {
                 <img className="max-h-[40px] sm:max-h-[75px]" src={getLogo()} alt="logo" />
                 <div className="flex my-0 sm:my-3 gap-0 sm:gap-4">
                     <div className="flex" ref={drop} id="network">
-                        {account && <button onClick={() => setOpen(open => !open)} id="dropdownButton" className="text-white bg-[#f78410] hover:bg-[#e48b24] focus:ring-[#f7b541] font-medium rounded-full text-sm mx-1 sm:pr-2 p-1 sm:pr-4 text-center inline-flex items-center dark:bg-[#f7a531] dark:hover:bg-[#f7b541] dark:focus:ring-[#f7b541]" type="button"><img className="max-h-[30px] mr-0 sm:mr-2" src={supportedChainIds.includes(chainId) ? NETWORKS[chainId].image : disturb} alt="unsupported" /><p className="hidden sm:block">{supportedChainIds.includes(chainId) ? NETWORKS[chainId].label : "Unsupported chain"}</p></button>}
+                        {account && <button onClick={() => setOpen(open => !open)} id="dropdownButton" className="text-white bg-[#f78410] hover:bg-[#e48b24] focus:ring-[#f7b541] font-medium rounded-full text-sm mx-1 sm:pr-2 p-1 sm:pr-4 text-center inline-flex items-center dark:bg-[#f7a531] dark:hover:bg-[#f7b541] dark:focus:ring-[#f7b541]" type="button"><img className="rounded-full max-h-[30px] mr-0 sm:mr-2" src={supportedChainIds.includes(chainId) ? NETWORKS[chainId].image : disturb} alt="unsupported" /><p className="hidden sm:block">{supportedChainIds.includes(chainId) ? NETWORKS[chainId].label : "Unsupported chain"}</p></button>}
 
                         {/* <!-- Dropdown menu --> */}
                         {open && <div className="z-10 mr-2 text-base list-none bg-white absolute top-[65px] rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
@@ -618,7 +621,7 @@ export const Home = () => {
                                 {Object.keys(NETWORKS).map((networkId) => {
                                     const network = NETWORKS[networkId]
                                     return (<li key={network.label}>
-                                        <span onClick={() => handleSwitchNetwork(networkId)} className="block cursor-pointer py-2 px-4 text-lg text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white flex items-center gap-2"><img className="max-h-[30px]" src={network.image} alt={network.label} />{network.label}</span>
+                                        <span onClick={() => handleSwitchNetwork(networkId)} className="block cursor-pointer py-2 px-4 text-lg text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white flex items-center gap-2"><img className="max-h-[30px] rounded-full" src={network.image} alt={network.label} />{network.label}</span>
                                     </li>)
                                 })}
                             </ul>
