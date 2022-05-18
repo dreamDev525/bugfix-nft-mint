@@ -11,7 +11,7 @@ contract BidifyToken is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("BidifyToken", "BIN") {}
+    constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
 
     function safeMint(address to, string memory uri) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();

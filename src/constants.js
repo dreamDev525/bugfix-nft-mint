@@ -14,19 +14,28 @@ export const NetworkId = {
 };
 export const supportedChainIds = [1, 4, 137, 43114, 1987]
 export const addresses = {
-  [NetworkId.POLYGON]: "",
-  [NetworkId.RINKEBY]: "0x3521750B9abda780854C570e83624aCB1EB7afe7",
-  [NetworkId.ETHERGEM]: "0xA625e8A998a78a2619Da38E656fA61AcEb45439a"
+  [NetworkId.POLYGON]: "0x683F246253934862B86b042476837a5e9B91E326",
+  [NetworkId.RINKEBY]: "0x0f79f4239F343fc932F357eFAAeE405a90d28e42",
+  [NetworkId.ETHERGEM]: "0x5A4Aa5B8f54763A22A7bE54F30Be650fe040b8eA",
+  [NetworkId.AVALANCHE]: "0x3c786F6A34EdfcabCC366025344c25C76Bc52434"
 };
-export const platforms = {
-  [NetworkId.POLYGON]: "",
-  [NetworkId.RINKEBY]: "0x3521750B9abda780854C570e83624aCB1EB7afe7",
-  [NetworkId.ETHERGEM]: "0x43dF4869458f2B81782cE29951d057253a68Ffc6"
+export const standard = {
+  [NetworkId.POLYGON]: "0x78A46265BedEfF1f18C3696dB01669A76B7833C8",
+  [NetworkId.RINKEBY]: "0xFe4317e87958f5b408aF9d8fFf78F228435fd0C8",
+  [NetworkId.ETHERGEM]: "0xf3195693ddb32822cdf759305a91b674ab1382e1",
+  [NetworkId.AVALANCHE]: "0x3c786F6A34EdfcabCC366025344c25C76Bc52434"
 }
+// export const platforms = {
+//   [NetworkId.POLYGON]: "0x175bc1bACF1fc054A5CA30AdeC155f00AaA2ce06",
+//   [NetworkId.RINKEBY]: "0x3521750B9abda780854C570e83624aCB1EB7afe7",
+//   [NetworkId.ETHERGEM]: "0x43dF4869458f2B81782cE29951d057253a68Ffc6",
+//   [NetworkId.AVALANCHE]: "0x0c11e7AC0864624e22935748ea092A27bD7B4924"
+// }
 export const explorer = {
-  [NetworkId.POLYGON]: "",
+  [NetworkId.POLYGON]: "https://polygonscan.com/",
   [NetworkId.RINKEBY]: "https://rinkeby.etherscan.io",
-  [NetworkId.ETHERGEM]: "https://blockscout.egem.io/"
+  [NetworkId.ETHERGEM]: "https://blockscout.egem.io/",
+  [NetworkId.AVALANCHE]: "https://snowtrace.io/"
 }
 
 /**
@@ -111,6 +120,40 @@ export const ABI = [
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "collectionOwned",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "platform",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "dev",
     "outputs": [
@@ -124,6 +167,36 @@ export const ABI = [
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getCollections",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "platform",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct BidifyFactory.Collection[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "string",
@@ -131,12 +204,27 @@ export const ABI = [
         "type": "string"
       },
       {
-        "internalType": "uint8",
+        "internalType": "uint256",
         "name": "count",
-        "type": "uint8"
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "collection",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "platform",
+        "type": "address"
       }
     ],
-    "name": "multipleMint",
+    "name": "mint",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -165,19 +253,6 @@ export const ABI = [
     "name": "setdev",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "tokenAddress",
-    "outputs": [
-      {
-        "internalType": "contract BidifyToken",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
