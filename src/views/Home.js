@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react"
 import bannerImg from "../assets/images/heroIllustration.svg"
-// import ethLogo from "../assets/images/bidifylogo.png"
-// import maticLogo from "../assets/images/bidifylogo_matic.png"
-import avaxLogo from "../assets/images/bidifylogo_avax.png"
-// import egemLogo from "../assets/images/bidifylogo_egem.png"
+import bidifyLogo from "../assets/images/bidify.png"
 import disturb from "../assets/images/disturb.png"
 import preview from "../assets/images/preview.svg"
 import mintLogo from "../assets/images/mintlogo.png"
 import info from "../assets/images/info.png"
+import instagram from "../assets/images/instagram.png"
+import tweeter from "../assets/images/tweeter.png"
+import facebook from "../assets/images/facebook.png"
 
 import { useWeb3React } from "@web3-react/core"
 import { FetchWrapper } from "use-nft";
@@ -490,7 +490,7 @@ export const Home = () => {
                 if (collections[i].name === collectionName) platform = collections[i].platform
             }
             let exist = platform === ethers.constants.AddressZero ? false : true
-            if(!advanced) exist = true
+            if (!advanced) exist = true
             // return console.log(exist)
             const mintCost = await BidifyMinter.calculateCost(amount)
             // return console.log(advanced)
@@ -573,13 +573,13 @@ export const Home = () => {
             if (collections[i].name === collectionName) {
                 exist = true;
                 setSymbol(collections[i].symbol)
-                if(chainId !== 56) setErc721(collections[i].platform)
-                if(chainId !== 56) checkAllowd(collections[i].platform)
+                if (chainId !== 56) setErc721(collections[i].platform)
+                if (chainId !== 56) checkAllowd(collections[i].platform)
             }
         }
         if (exist) {
             setSymbolEditable(false)
-            if(chainId === 56) setForSale(false)
+            if (chainId === 56) setForSale(false)
         }
         else {
             setSymbolEditable(true)
@@ -594,7 +594,35 @@ export const Home = () => {
         setOpenCollection(false)
         setCollectionName(item.name)
         setSymbol(item.symbol)
-        if(chainId !== 56) setErc721(item.platform)
+        if (chainId !== 56) setErc721(item.platform)
+    }
+    const renderModal = () => {
+        return (
+            <div className="overflow-y-auto overflow-x-hidden fixed w-full bg-[rgba(0,0,0,0.4)] h-[100vh] flex justify-center items-center top-0 right-0 left-0 z-[999999] h-modal">
+                <div className="relative p-4 w-full max-w-4xl md:h-auto mx-2">
+                    <div className="relative bg-[#DCDAE9] rounded-3xl shadow-lg dark:bg-gray-700">
+                        <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" onClick={() => setShowAlert(false)}>
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                        </button>
+                        <div className="p-6 text-center">
+                            <img className="mx-auto -mt-12 mb-8 w-12 h-12 bg-[#FFEAD6] rounded-full p-2 text-gray-400 dark:text-gray-200" src={bidifyLogo} alt="logo" />
+                            <h3 className="mb-5 text-xl font-medium text-[#F09132] ">Congratulations on your new Minted NFT</h3>
+                            <a href={`${explorer[chainId]}/tx/${transaction}`} target="_blank" rel="noreferrer"  className="self-center mt-4 text-white bg-[#e48b24] hover:bg-[#f7a531] focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-8 mx-auto py-2.5 text-center">
+                                View Transaction
+                            </a>
+                            <img className={`mt-8 min-w-[240px] max-w-[240px] mx-auto rounded-lg ${buffer ? "" : "animate-pulse"}`} src={buffer ? `data:${type};base64,${buffer.toString('base64')}` : preview} alt="preview" />
+                            <p className="text-xl mt-4 font-bold tracking-tight break-words text-[#AA5E0D]">{name}</p>
+                            <div className="mt-6 flex gap-3 items-center justify-center">
+                                <p className="text-[#F09132]">Share with the world</p>
+                                <a href="#"><img src={tweeter} alt="social" /></a>
+                                <a href="#"><img src={facebook} alt="social" /></a>
+                                <a href="#"><img src={instagram} alt="social" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     }
     return (
         <div>
@@ -640,24 +668,6 @@ export const Home = () => {
                 <img className="min-w-[100px] lg:min-w-[400px] mb-12 mr-12 non-movable" src={bannerImg} alt="hero" />
             </div>
             <div className="mx-2 sm:mx-16 shadow-xl rounded-lg py-4 mb-8 mt-[-70px] md:mt-[-80px] bg-white z-33">
-                {showAlert && <div id="alert-additional-content-3" className="max-w-5xl mt-8 mx-4 lg:mx-auto p-4 mb-4 bg-green-100 rounded-lg dark:bg-green-200" role="alert">
-                    <div className="flex items-center">
-                        <svg className="mr-2 w-5 h-5 text-green-700 dark:text-green-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
-                        <h3 className="text-lg font-medium text-green-700 dark:text-green-800">NFT Minted successfully!</h3>
-                    </div>
-                    <div className="mt-2 mb-4 text-sm text-green-700 dark:text-green-800">
-                        More info about this info success goes here. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
-                    </div>
-                    <div className="flex">
-                        <a href={`${explorer[chainId]}/tx/${transaction}`} target="_blank" rel="noreferrer" className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 mr-2 text-center inline-flex items-center dark:bg-green-800 dark:hover:bg-green-900">
-                            <svg className="-ml-0.5 mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"></path></svg>
-                            View Transaction
-                        </a>
-                        <button type="button" className="text-green-700 bg-transparent border border-green-700 hover:bg-green-800 hover:text-white focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:border-green-800 dark:text-green-800 dark:hover:text-white" onClick={() => setShowAlert(false)}>
-                            Dismiss
-                        </button>
-                    </div>
-                </div>}
                 <div className="flex flex-col-reverse md:flex-row px-6 gap-4 mb-8 items-center max-w-5xl mx-auto">
                     <div className="flex w-full flex-col items-center">
                         <span className="text-4xl text-[#e48b24] font-bold">Preview</span>
@@ -719,7 +729,7 @@ export const Home = () => {
                                 </div>
                                 <div className="flex relative" ref={collection} id="collection">
 
-                                    <input type="text"  onClick={() => setOpenCollection(true)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#e48b24] focus:border-[#e48b24] block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#e48b24] dark:focus:border-[#e48b24]" value={collectionName} onChange={(e) => setCollectionName(e.target.value)} />
+                                    <input type="text" onClick={() => setOpenCollection(true)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#e48b24] focus:border-[#e48b24] block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#e48b24] dark:focus:border-[#e48b24]" value={collectionName} onChange={(e) => setCollectionName(e.target.value)} />
 
                                     {/* <!-- Dropdown menu --> */}
                                     {openCollection && <div className="z-10 mr-2 text-base list-none bg-white w-full absolute top-[45px] rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
@@ -802,7 +812,7 @@ export const Home = () => {
                             {advanced ? "Mint Advanced NFT" : "Mint Standard NFT"}
                         </button>
 
-                        {loading && <div className="overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-0 z-50 justify-center items-center md:inset-0 h-modal w-full bg-[#0003] flex h-full" id="popup-modal">
+                        {loading && <div className="overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-0 z-50 justify-center items-center md:inset-0 h-modal w-full bg-[#0003] flex h-[100vh]" id="popup-modal">
                             <div className="relative px-4 w-full max-w-md h-auto">
                                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                     <div className="p-6 pt-16 pb-8 text-center">
@@ -835,6 +845,7 @@ export const Home = () => {
                     </button>
                 </div>
             </div>}
+            {showAlert && renderModal()}
         </div>
     )
 }
