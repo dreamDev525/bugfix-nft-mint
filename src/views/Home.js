@@ -5,7 +5,7 @@ import disturb from "../assets/images/disturb.png"
 import preview from "../assets/images/preview.svg"
 import mintLogo from "../assets/images/mintlogo.png"
 import info from "../assets/images/info.png"
-import instagram from "../assets/images/instagram.png"
+import instagram from "../assets/images/telegram.png"
 import tweeter from "../assets/images/tweeter.png"
 import facebook from "../assets/images/facebook.png"
 
@@ -614,9 +614,9 @@ export const Home = () => {
                             <p className="text-xl mt-4 font-bold tracking-tight break-words text-[#AA5E0D]">{name}</p>
                             <div className="mt-6 flex gap-3 items-center justify-center">
                                 <p className="text-[#F09132]">Share with the world</p>
-                                <a href="#"><img src={tweeter} alt="social" /></a>
-                                <a href="#"><img src={facebook} alt="social" /></a>
-                                <a href="#"><img src={instagram} alt="social" /></a>
+                                <a href={`https://twitter.com/intent/tweet?url=${explorer[chainId]}/tx/${transaction}&text=Check%20out%20the%20new%20NFT%20I%27ve%20minted%20called%20${name}`}><img src={tweeter} alt="social" /></a>
+                                <a href={`https://www.facebook.com/sharer/sharer.php?u=${explorer[chainId]}/tx/${transaction}&quote=Check%20out%20the%20new%20NFT%20I%27ve%20minted%20called%20${name}`}><img src={facebook} alt="social" /></a>
+                                <a href={`https://t.me/share/url?url=${explorer[chainId]}/tx/${transaction}&text=Check%20out%20the%20new%20NFT%20I%27ve%20minted%20called%20${name}`}><img src={instagram} alt="social" /></a>
                             </div>
                         </div>
                     </div>
