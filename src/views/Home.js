@@ -82,8 +82,8 @@ const transackLogo = "https://www.gitbook.com/cdn-cgi/image/width=40,height=40,f
 export const Home = () => {
     const { account, library, chainId, activate } = useWeb3React()
     const [buffer, setBuffer] = useState()
-    const [name, setName] = useState()
-    const [description, setDescription] = useState()
+    const [name, setName] = useState("")
+    const [description, setDescription] = useState("")
     const [amount, setAmount] = useState(1)
     const [forSale, setForSale] = useState(false)
     const [bid, setBid] = useState(0)
@@ -596,17 +596,29 @@ export const Home = () => {
         setSymbol(item.symbol)
         if (chainId !== 56) setErc721(item.platform)
     }
+    const handleDismiss = () => {
+        setBuffer(null)
+        setType(null)
+        setName("")
+        setCollectionName("")
+        setSymbol("")
+        setAmount(1)
+        setDescription("")
+        setBid(0)
+        setDuration(0)
+        setShowAlert(false)
+    }
     const renderModal = () => {
         return (
             <div className="overflow-y-auto overflow-x-hidden fixed w-full bg-[rgba(0,0,0,0.4)] h-[100vh] flex justify-center items-center top-0 right-0 left-0 z-[999999] h-modal">
                 <div className="relative p-4 w-full max-w-4xl md:h-auto mx-2">
                     <div className="relative bg-[#DCDAE9] rounded-3xl shadow-lg dark:bg-gray-700">
-                        <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" onClick={() => setShowAlert(false)}>
+                        <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" onClick={handleDismiss}>
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                         </button>
                         <div className="p-6 text-center">
                             <img className="mx-auto -mt-12 mb-8 w-12 h-12 bg-[#FFEAD6] rounded-full p-2 text-gray-400 dark:text-gray-200" src={bidifyLogo} alt="logo" />
-                            <h3 className="mb-5 text-xl font-medium text-[#F09132] ">Congratulations on your new Minted NFT</h3>
+                            <h3 className="mb-5 text-xl font-medium text-[#F09132] ">Congratulations on your newly Minted NFT</h3>
                             <a href={`${explorer[chainId]}/tx/${transaction}`} target="_blank" rel="noreferrer"  className="self-center mt-4 text-white bg-[#e48b24] hover:bg-[#f7a531] focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-8 mx-auto py-2.5 text-center">
                                 View Transaction
                             </a>
@@ -718,7 +730,7 @@ export const Home = () => {
                             The name of your NFT
                             <div className="tooltip-arrow" data-popper-arrow></div>
                         </div>
-                        <input type="text" id="title" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#e48b24] focus:border-[#e48b24] block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#e48b24] dark:focus:border-[#e48b24]" onChange={(e) => setName(e.target.value)} />
+                        <input type="text" id="title" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#e48b24] focus:border-[#e48b24] block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#e48b24] dark:focus:border-[#e48b24]" value={name} onChange={(e) => setName(e.target.value)} />
                         {/* Collection */}
                         {advanced && <div className="flex gap-2 mt-4">
                             <div className="flex-col flex-grow">
@@ -759,7 +771,7 @@ export const Home = () => {
                             Description of your NFT, here you may include information about the image, the inspiration and the meaning of your NFT
                             <div className="tooltip-arrow" data-popper-arrow></div>
                         </div>
-                        <textarea id="message" rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-[#e48b24] focus:border-[#e48b24] dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#e48b24] dark:focus:border-[#e48b24]" placeholder="" onChange={(e) => setDescription(e.target.value)} />
+                        <textarea id="message" rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-[#e48b24] focus:border-[#e48b24] dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#e48b24] dark:focus:border-[#e48b24]" placeholder="" onChange={(e) => setDescription(e.target.value)} value={description} />
                         {/* Amount */}
                         <label htmlFor="amount" className="mt-4 block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-1">Quantity <img data-tooltip-target="tooltip-amount" className="w-[15px] h-[15px]" src={info} alt="info" /></label>
                         <div id="tooltip-amount" role="tooltip" className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-[#e48b24] rounded-lg shadow-sm opacity-0 transition-opacity max-w-sm duration-300 tooltip dark:bg-gray-700">
