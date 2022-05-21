@@ -14,7 +14,7 @@ export const NetworkId = {
   BSC: 56
   // FUJI: 43113,
 };
-export const supportedChainIds = [1, 4, 56, 137, 43114, 1987]
+export const supportedChainIds = [4, 56, 137, 43114, 1987]
 export const addresses = {
   [NetworkId.POLYGON]: "0x683F246253934862B86b042476837a5e9B91E326",
   [NetworkId.RINKEBY]: "0x0f79f4239F343fc932F357eFAAeE405a90d28e42",
@@ -58,11 +58,11 @@ export const NETWORKS = {
   //   label: "Polygon Mumbai",
   //   chainId: 80001
   // },
-  [NetworkId.ETHEREUM]: {
-    image: eth,
-    label: "Ethereum",
-    chainId: 1
-  },
+  // [NetworkId.ETHEREUM]: {
+  //   image: eth,
+  //   label: "Ethereum",
+  //   chainId: 1
+  // },
   [NetworkId.RINKEBY]: {
     image: eth,
     label: "Rinkeby",
