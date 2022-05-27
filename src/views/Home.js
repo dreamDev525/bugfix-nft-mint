@@ -167,6 +167,10 @@ export const Home = () => {
                 return "AVAX"
             case 56:
                 return "BNB"
+            case 8217:
+                return "KLAY"
+            case 100: return "XDAI"
+            case 61: return "ETC"
             default: return "Currency"
         }
     }
@@ -506,7 +510,7 @@ export const Home = () => {
             }
             console.log(txHash.events)
             let tokenIds = []
-            if (chainId === 4 || chainId === 43114 || chainId === 56) {
+            if (chainId === 4 || chainId === 43114 || chainId === 56 || chainId === 100 || chainId === 61) {
                 tokenIds = txHash.events.map((event) => {
                     const hex = event.topics[3]
                     return Number(ethers.utils.hexValue(hex))
@@ -573,13 +577,13 @@ export const Home = () => {
             if (collections[i].name === collectionName) {
                 exist = true;
                 setSymbol(collections[i].symbol)
-                if (chainId !== 56) setErc721(collections[i].platform)
-                if (chainId !== 56) checkAllowd(collections[i].platform)
+                if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217) setErc721(collections[i].platform)
+                if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217) checkAllowd(collections[i].platform)
             }
         }
         if (exist) {
             setSymbolEditable(false)
-            if (chainId === 56) setForSale(false)
+            if (chainId === 56  || chainId === 61 || chainId === 100 || chainId === 8217) setForSale(false)
         }
         else {
             setSymbolEditable(true)
@@ -594,7 +598,7 @@ export const Home = () => {
         setOpenCollection(false)
         setCollectionName(item.name)
         setSymbol(item.symbol)
-        if (chainId !== 56) setErc721(item.platform)
+        if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217) setErc721(item.platform)
     }
     const handleDismiss = () => {
         setBuffer(null)

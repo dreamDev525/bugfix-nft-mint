@@ -2,7 +2,10 @@ import eth from "./assets/images/eth.png"
 import matic from "./assets/images/matic.png"
 import avax from "./assets/images/avax.png"
 import egem from "./assets/images/egem.png"
-import bnb from "./assets/images/bnb.jpg"
+import bnb from "./assets/images/bnb.png"
+import gnosis from "./assets/images/gnosis.png"
+import etc from "./assets/images/etc.png"
+import klaytn from "./assets/images/klaytn.png"
 
 export const NetworkId = {
   POLYGON: 137,
@@ -11,23 +14,30 @@ export const NetworkId = {
   ETHEREUM: 1,
   ETHERGEM: 1987,
   AVALANCHE: 43114,
-  BSC: 56
+  BSC: 56,
+  GNOSIS: 100,
+  ETC: 61,
+  KLAYTN: 8217
   // FUJI: 43113,
 };
-export const supportedChainIds = [4, 56, 137, 43114, 1987]
+export const supportedChainIds = [4, 56, 137, 43114, 1987, 61, 100]
 export const addresses = {
   [NetworkId.POLYGON]: "0x683F246253934862B86b042476837a5e9B91E326",
   [NetworkId.RINKEBY]: "0x0f79f4239F343fc932F357eFAAeE405a90d28e42",
   [NetworkId.ETHERGEM]: "0x5A4Aa5B8f54763A22A7bE54F30Be650fe040b8eA",
   [NetworkId.AVALANCHE]: "0x0a8D5435a43c8d63b47D6E61F5eE88868A1b8Ed9",
-  [NetworkId.BSC]: "0x57aa9274d64185A77DAde4c104A49eD52C9D42Af"
+  [NetworkId.BSC]: "0x57aa9274d64185A77DAde4c104A49eD52C9D42Af",
+  [NetworkId.GNOSIS]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
+  [NetworkId.ETC]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047"
 };
 export const standard = {
   [NetworkId.POLYGON]: "0x78A46265BedEfF1f18C3696dB01669A76B7833C8",
   [NetworkId.RINKEBY]: "0xFe4317e87958f5b408aF9d8fFf78F228435fd0C8",
   [NetworkId.ETHERGEM]: "0xf3195693ddb32822cdf759305a91b674ab1382e1",
   [NetworkId.AVALANCHE]: "0x0603347E9f803D28b59B8346480b1a43a11eE100",
-  [NetworkId.BSC]: "0xCE387EEAD4bf81D5665EacBC457CcAea51955863"
+  [NetworkId.BSC]: "0xCE387EEAD4bf81D5665EacBC457CcAea51955863",
+  [NetworkId.GNOSIS]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
+  [NetworkId.ETC]: "0xCbd697f76e90435Dce788ce14e096f732803fA71"
 }
 // export const platforms = {
 //   [NetworkId.POLYGON]: "0x175bc1bACF1fc054A5CA30AdeC155f00AaA2ce06",
@@ -40,7 +50,9 @@ export const explorer = {
   [NetworkId.RINKEBY]: "https://rinkeby.etherscan.io",
   [NetworkId.ETHERGEM]: "https://blockscout.egem.io/",
   [NetworkId.AVALANCHE]: "https://snowtrace.io/",
-  [NetworkId.BSC]: "https://bscscan.com/"
+  [NetworkId.BSC]: "https://bscscan.com/",
+  [NetworkId.GNOSIS]: "https://blockscout.com/xdai/mainnet/",
+  [NetworkId.ETC]: "https://blockscout.com/etc/mainnet/"
 }
 
 /**
@@ -82,7 +94,22 @@ export const NETWORKS = {
     image: bnb,
     label: "Binance Smart Chain",
     chainId: 56,
-  }
+  },
+  [NetworkId.ETC]: {
+    image: etc,
+    label: "Ethereum Classic",
+    chainId: 61
+  },
+  [NetworkId.GNOSIS]: {
+    image: gnosis,
+    label: "Gnosis Chain",
+    chainId: 100
+  },
+  // [NetworkId.KLAYTN]: {
+  //   image: klaytn,
+  //   label: "Klaytn Mainnet",
+  //   chainId: 8217
+  // }
   // [NetworkId.FUJI]: {
   //   image: avax,
   //   label: "Avalanche Fuji",
