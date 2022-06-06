@@ -5,9 +5,12 @@ import disturb from "../assets/images/disturb.png"
 import preview from "../assets/images/preview.svg"
 import mintLogo from "../assets/images/mintlogo.png"
 import info from "../assets/images/info.png"
-import instagram from "../assets/images/telegram.png"
+import telegram from "../assets/images/telegram.png"
 import tweeter from "../assets/images/tweeter.png"
 import facebook from "../assets/images/facebook.png"
+import instagram from "../assets/images/instagram.png"
+import discord from "../assets/images/discord.png"
+import youtube from "../assets/images/youtube.png"
 
 import { useWeb3React } from "@web3-react/core"
 import { FetchWrapper } from "use-nft";
@@ -17,9 +20,11 @@ import { addresses, ABI, NETWORKS, supportedChainIds, explorer, BIDIFY, getLogUr
 import { ethers, Contract } from "ethers"
 import { Buffer } from "buffer"
 import axios from "axios"
-// import Arweave from "arweave"
+import MailchimpSubscribe from "react-mailchimp-subscribe";
 
 import { create } from 'ipfs-http-client'
+
+const postUrl = `https://gmail.us12.list-manage.com/subscribe/post?u=${process.env.REACT_APP_MAILCHIMP_U}&id=${process.env.REACT_APP_MAILCHIMP_ID}`;
 const ipfs = create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 const modalContents = {
     ipfs: "Uploading data to the IPFS...",
@@ -27,58 +32,10 @@ const modalContents = {
     database: "Adding to database...",
     list: "Creating Auctions... \nThis will take a few minutes and you should to confirm transactions several times."
 }
-const transakURL = "https://staging-global.transak.com/?apiKey=a26373cf-a121-43b0-a2c1-d3bf8253666f"
-const transackLogo = "https://www.gitbook.com/cdn-cgi/image/width=40,height=40,fit=contain,dpr=1.25,format=auto/https%3A%2F%2F2568214732-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FyKT7ulakWzij4PDiIp6U%252Ficon%252FTbk5OkyEAiidHiC1yXpm%252FsK_Kgoxa_400x400.jpeg%3Falt%3Dmedia%26token%3Dacdf28e9-2036-4d48-93ce-dbd0eb6f5714"
+// const transakURL = "https://staging-global.transak.com/?apiKey=a26373cf-a121-43b0-a2c1-d3bf8253666f"
+// const transackLogo = "https://www.gitbook.com/cdn-cgi/image/width=40,height=40,fit=contain,dpr=1.25,format=auto/https%3A%2F%2F2568214732-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FyKT7ulakWzij4PDiIp6U%252Ficon%252FTbk5OkyEAiidHiC1yXpm%252FsK_Kgoxa_400x400.jpeg%3Falt%3Dmedia%26token%3Dacdf28e9-2036-4d48-93ce-dbd0eb6f5714"
 
-// const arweave = Arweave.init({
-//     host: "arweave.net",
-//     port: 443,
-//     protocol: "https",
-//     timeout: 200000, // Network request timeouts in milliseconds
-//     logging: false, // Disable network request logging
-// });
-// // Submits a transaction and reads the data
-// const KEY = {
-//     "d":"Wf9a445LKJ5BtXWbTv6UEVtjJi5mUoTcxVNbtea8Xutaz7PHgHsc4kchRmoa4ZiGCUXcRX2OK6CHL4OhyUxid9PMKPS4A-YiFshdVDIERP_PrE1l23uHbAigMvjmv0W7DXRd7EJ7qqD0zYx0Pqq5k1xVXXJELOgrzWkKYEQbIoYosCcZcTUTL2TVdo3dGYmnKynORJbFEVwAr-zp3a6zXb-mIJs8x44xdsU1lIzJmjZC9VHWzzOlNdJ3tSxgQgF-rkjB3kYBLEpjw1AGzP-Hx3qFbwmqgO7GAhxeznZtYUjqYQTFs_vDqRiq90zX6cnKP-k4G5rNfRlMb0u5Z95f0NK3lWAHcp22EGGcCiN2yGABPWUN0akwlSFhpwMVTj0kdJd9t-w36eryIR9FTdym8dhhvxZ26PqxRYJDuZuZZLwPMZKE9kGxOYP5deHMpuQPJG-hgvp148vdYk481y2sIzN6e3P3YM_1ftllFbVIIpZO-21Q_dQSVk1iTjn853fa16b6G2rFbv7AQ4xwfvq6i03KRghKjm4o4a4tUSMC8Lch0BVhIwyLh9dCH8LOASqHvouVFyeTUBV-mTY_mvGoPd7T4PQqpqVbIGZ4Uff5QvVOzPnG72i8aFm_5qApYMbgCu6lROZPTDnnvwFGlPB9lKL6SyETA95TxZQBnKOu0UE",
-//     "dp":"6WlDC3U8drYn_4fxF6CI8jISG45JMf1XBIX-Vcd8QvbfDDS4IuJwowArYfsGUGJSxgNZTRlcb4bvO4GRKVg3ioYybg7NVEFhAoP5Xw6ozfS5Vub6k8SykV2oid4mMEYu6NmitjMTGVDB099XoJG1eMNduEkrm_M7MrBtiwiebZcESpCkig1jHeMTlmahrSmquK7RLDakZX0X_cP3M-nCJsRwWjAg9Bzew_Ld1xqgrVdcAh8kzi5fPtduo2alk0iZk7-rptqL3t8wEl1DIbkvDAs-Ns4s9e3GMYGjTsBGSkWMvYLvjQGrKUKOBtFDkDHx6Q9lG6P7vroTcnmhOy_VeQ",
-//     "dq":"UXCTaAW83yZNKTy9aj4SUsOb8QxGY0k5tlPZcs83ISilbjUPb9zp5gkeHuVU-9kISQuEenbcJtskZk43nE1mGmjZ6KuZtLuAkjfuo8vEYKe8tn63dnryD8vSBfyPkhHkVvR3K7Bwb5yZxa-cNaG-coh6HqzpLI8sLJ5rJ0Y7Nj_KD3N52GI7TfQnXC6FUtSIFeuQETTd64Ue1gHLFM5_X_cGHT7AgbKZpZyw8GC5ADtAl3m0k63ZjqPPJHOZQK11tNiapRB-wXcJOTx-LxhmOK9ZLV6PdVISJv16AhQVCdb7MsPYalU3JvviFb54gJ-wJDLh5awgLdMCPKqCn2OesQ",
-//     "e":"AQAB",
-//     "ext":true,
-//     "kty":"RSA",
-//     "n":"oxclfOz01Ej7vmPba_S5YCyK5QF_RhvB6-IipuPLHrK_pCMiA8xrmwetXEQbH5LfZrtiHOE2ZM4fVJpaOzUJ7tCbtSupOEw1du6Q538AbMHY09Rh49nS9mFj091_IIQE-kTtesSotOgl39uLHF7_V6BNMsltiVmOp0ZeFbFETngXUcABh_pPwGfHggX1MZdlfh0EvQk8OBlT6sZ7_oDac2rzYWtQuUFvcj9UB3apKK4dfJyGP0lYURdHRcZnaGppUJnObaXMuWa_SrMekNw1bDpVrVQ2LzIIFxCiYFlx5pqU4Mi98K2Q_5lNmmt2d0mgH9mpfYhOts4ZY2gnRQIkgywB_xCU3xOoautlAGeSpPP_Ytoj1Tb0B0l8SE0D0ttGSQg0Veg80BCb6f8E7PMA1Uhat_k8UN7lJ04FvzVAtiZhvEjSsRHknH6VWPomEsU6uc0YtYjlNRfC-4C5oR8U0_maCoKpGPTUR-m-nC5lL0txYP-O17s1Hox17UEHgaApHnvj9zTOvvf3tBYol26sZDvTmZxYEp43yyaFdpI7OUOXvsT3uitbPg2uMHblqVMgP1uvTeNAugSQH6hPWqauEy6AaKd1hSEJBT3yX1YhPvbfufN_cA4Qp4Q_AK_mzHoX9Zk7YA6eFv4v_PHWR2ydfBofJcTVXulSAW8f3noQfb0",
-//     "p":"7W-utDm6OWeFktqw2mSQncchudxF1xkwOPP0on5iB3-lepVHnBlptcsMy6FV1ZS19Uu1lcokAP-zdpT2j_22-h48DJ_5BMl2zQHiDS0pr1vfp2AL7ntRB2ZPhE5b0IaGeh4JzlqFzIiz4JDfqbMkzAV2KgEETcgYwUGSjOUStVOqp4dT4GDQ9U3Q4SqGdtKM0OtmiaCOxzU-VynknSJIt9Om0_ugLL_av0sRRuHO3vK5yxGlcKmtIeewEDurtG6EDOk6quc5S9nx8JaCFww_4jkuMFHm4zfwrNU5VwLbbfq0C7qH2Pf7Zv5J3aZZqj2pd87IxZG9TYPsLp86GsERzQ",
-//     "q":"r9dsGtR-_b26PwTJojm1-Pt1wP_Izbia-ynflbxs8BmPbc697TqJ_WCL3wBPoLY2FH5BHGz9k7eYcQn1v59mOl85PPdGHYvfoKpO9SpmTyEuzYASQu-35Q997YR0JIx_ob9UFK1WqSViFR0fPe5fmCZ_qwsshOP2fA26kWYIBDVoQ6eFO2-JyhFeUj-OHg7RZ8ufylVUKsUF_UF7qEPYag27Ow3sLwVd8vsJdrCsEENYQIX3shbmiqawhxqBf9dvbOUqt0P8Vto_EotPN8vjbzd8mld38LJTdLMMHbSkcoBb2FoJE5ssrVROycPZolUj4tfygpf7KI19qCPScCzrsQ",
-//     "qi":"sJocBN4rvpmHqbMBTJbAW7Cu4DcWrlrLQPZpK4jeHj9cMOJXyLBwRZYMlXTl4IWZYWUqMslJLiS4z7wEpZ8fxPQGB1o3k1L0PQO3HUuN6rtwFKd7uK4fDxFe8K3yuykWEjzgPkpC5uVz3-dXmmmQClUOHRnlR0bGod_eI8g1ZAu6yJ1QmaYpJ4t63xT4lQCnRLBkOmdppL_ImM5AHTDPqIbm7Cqb2eHIOoXWgYtufRhMRmlMG4mAu6y8N1OXN6B_YzBlIdA64zRS0MLhcIPyQXsT7fPqBizyTI4rx3V7mZxNbbNfEGCyp7ZqhOUcR97LG-XrUPeDN9gZjfutMvfwLQ"
-//  }
-// async function run() {
-//     // The data we're uploading
-//     const imageDataUri =
-//       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAAAXNSR0IArs4c6QAABLNJREFUeF7t28GO2zAMRdHk/z86RdtVAQ9AlmIoy2fWT6R1eaNEwPj9+Xw+L38IDBF4E3CIvLZ/CBCQCKMECDiKX3MCcmCUAAFH8WtOQA6MEiDgKH7NCciBUQIEHMWvOQE5MEqAgKP4NScgB0YJEHAUv+YE5MAoAQKO4tecgBwYJUDAUfyaE5ADowQIOIpf88cJ+H6//3vqXp/5b3Q/LiRggikBE7CCUQIGQf2OETABKxglYBAUAROgElECJmA5AROwgtFjBPzG5aLS42oehD7oveCKHFERKj0IeH0kOgETlwsCBr9XEzECEjChy/ooAQm43qpExe0FjH7tRX/HJdi0R0/eWxQeAaOkGnIEvMEt+OQhnby36OfVCRgl1ZAjoBOwQat4SQLeVMA7XjjiWj4recuvYAKeIykBz5nlLXdCwFuO7ZyHJuA5s7zlTrYS8OpW6PfeLb0KPzQBw6gEOwgQsIOqmmECBAyjEuwgQMAOqmqGCYwJ6MIRntHRQQIePd79N0fA/Wd09BMS8Ojx7r85Au4/o6Of8CsCunAc7VBpcwQs4bO4SoCAVYLWlwgQsITP4ioBAlYJWl8isFxAF47SPB63mICPG/leGybgXvN43NMQ8HEj32vDBNxrHo97mpKALhyP82X5hgm4HKmCGQIEzNCSXU6AgMuRKpghQMAMLdnlBAi4HKmCGQIEzNCSXU6AgMuRKpghQMAMLdnlBAi4HKmCGQIEzNCSXU6AgMuRKpghQMAMLdnlBAi4HKmCGQIEzNCSXU6AgMuRKpghQMAMLdnlBAi4HKmCGQIEzNCSXU6AgMuRKpghEBbQ+x8ZrLJRAgSMkpJrIUDAFqyKRgkQMEpKroUAAVuwKholQMAoKbkWAgRswapolAABo6TkWggQsAWrolECBIySkmshQMAWrIpGCRAwSkquhQABW7AqGiVAwCgpuRYCBGzBqmiUAAGjpORaCBCwBauiUQIEjJKSayFAwBasikYJEDBKSq6FwKWA3v9oYa3oBQEC0mKUAAFH8WtOQA6MEiDgKH7N3YI5MEqAgKP4NScgB0YJEHAUv+YE5MAoAQKO4tecgBwYJUDAUfyaE5ADowQIOIpf87CAV6j82xaBqgQIWCVofYkAAUv4LK4SIGCVoPUlAgQs4bO4SqAkoItJFb/1BOTAKAECjuLXnIAcGCVAwFH8mi8X0MWEVBkCBMzQkl1OgIDLkSqYIUDADC3Z5QQIuBypghkCXxEwejG5yn0+n8x+jsxe/dtbZaM7MSVgZZJfWkvABtBRqDt9WhswhEpGWYWKvV6vnZg6AaNTG8wRsAF+FOpOn9YGDKGSUVahYk7AKKa/uQr83eWN7m33feQm+m967Cs4+tDRId3xBh3dGwGjtjTkokMiYAP8L5R0An4B8k8toh8uJ+ANhuQEHBxSofX2J2Bhb6ULTKVvZe3Jp90VFwJWbGlYS8AGqFMlo7+xpp7vjj8bVrNyAq4mWqznBCwC3Gm5E3CnaVw/y9En4P74PSEBOTBKgICj+DUnIAdGCRBwFL/mBOTAKAECjuLXnIAcGCVAwFH8mhOQA6MECDiKX3MCcmCUAAFH8WtOQA6MEiDgKH7NfwER2jFdIT5jOQAAAABJRU5ErkJggg==";
-//     const imageBuffer = Buffer.from(imageDataUri.split(",")[1], "base64");
 
-//     // Create and submit transaction
-//     const key = KEY;
-//     const transaction = await arweave.createTransaction(
-//       {
-//         data: imageBuffer,
-//       },
-//       key
-//     );
-
-//     await arweave.transactions.sign(transaction, key);
-//     await arweave.transactions.post(transaction);
-
-//     // Transaction ID gets updated after arweave.transactions.post, which is a bit unintuitive
-//     console.log("transaction ID", transaction.id);
-
-//     // Read data back
-//     const transactionData = await arweave.transactions.getData(transaction.id);
-//     console.log(transactionData, "=====>>>>>>")
-//     console.log(
-//       "transaction data",
-//       Buffer.from(transactionData, "base64").toString()
-//     );
-//   }
 export const Home = () => {
     const { account, library, chainId, activate } = useWeb3React()
     const [buffer, setBuffer] = useState()
@@ -103,6 +60,8 @@ export const Home = () => {
     const [erc721, setErc721] = useState("")
     const [toast, setToast] = useState("")
     const [advanced, setAdvanced] = useState(false)
+    const [expand, setExpand] = useState(false)
+    const [email, setEmail] = useState("")
 
     const [open, setOpen] = useState(false)
     const [openCollection, setOpenCollection] = useState(false)
@@ -171,6 +130,8 @@ export const Home = () => {
                 return "KLAY"
             case 100: return "XDAI"
             case 61: return "ETC"
+            case 1285: return "MOVR"
+            case 9001: return "EVMOS"
             default: return "Currency"
         }
     }
@@ -510,7 +471,7 @@ export const Home = () => {
             }
             console.log(txHash.events)
             let tokenIds = []
-            if (chainId === 4 || chainId === 43114 || chainId === 56 || chainId === 100 || chainId === 61) {
+            if (chainId === 4 || chainId === 43114 || chainId === 56 || chainId === 100 || chainId === 61 || chainId === 1285 || chainId === 9001) {
                 tokenIds = txHash.events.map((event) => {
                     const hex = event.topics[3]
                     return Number(ethers.utils.hexValue(hex))
@@ -583,7 +544,7 @@ export const Home = () => {
         }
         if (exist) {
             setSymbolEditable(false)
-            if (chainId === 56  || chainId === 61 || chainId === 100 || chainId === 8217) setForSale(false)
+            if (chainId === 56 || chainId === 61 || chainId === 100 || chainId === 8217) setForSale(false)
         }
         else {
             setSymbolEditable(true)
@@ -612,28 +573,110 @@ export const Home = () => {
         setDuration(0)
         setShowAlert(false)
     }
+    const CustomForm = ({ status, message, onValidated }) => {
+
+        const [email, setEmail] = useState('');
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            email && email.indexOf("@") > -1 &&
+                onValidated({
+                    EMAIL: email,
+                });
+        }
+
+        return (
+            <form
+                className="flex gap-4 flex-col items-center w-full"
+                onSubmit={(e) => handleSubmit(e)}
+            >
+                <div className="flex gap-2 w-full">
+                    <input type="email" name="email" className="rounded-lg flex-grow min-w-[140px]" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <button className="flex items-center h-[48px] text-white bg-[#e48b24] hover:bg-[#f7a531] focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-4 py-2 text-center" type="submit">Subscribe</button>
+                </div>
+                {status === "sending" && (
+                    <div className="text-[#F09132]">
+                        sending...
+                    </div>
+                )}
+                {status === "error" && (
+                    <div
+                        className="text-[#da4141]"
+                        dangerouslySetInnerHTML={{ __html: message }}
+                    />
+                )}
+                {status === "success" && (
+                    <div
+                        className="text-[#3ac662]"
+                        dangerouslySetInnerHTML={{ __html: message }}
+                    />
+                )}
+            </form>
+        );
+    };
     const renderModal = () => {
         return (
-            <div className="overflow-y-auto overflow-x-hidden fixed w-full bg-[rgba(0,0,0,0.4)] h-[100vh] flex justify-center items-center top-0 right-0 left-0 z-[999999] h-modal">
-                <div className="relative p-4 w-full max-w-4xl md:h-auto mx-2">
-                    <div className="relative bg-[#DCDAE9] rounded-3xl shadow-lg dark:bg-gray-700">
+            <div className="overflow-y-auto overflow-x-hidden fixed w-full bg-[rgba(0,0,0,0.4)] h-[100vh] flex justify-center items-start top-0 right-0 left-0 z-[999999]">
+                <div className="relative p-4 sm:mt-8 w-full max-w-4xl h-auto mx-2">
+                    <div className="relative my-auto bg-[#DCDAE9] rounded-3xl shadow-lg dark:bg-gray-700">
                         <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" onClick={handleDismiss}>
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                         </button>
-                        <div className="p-6 text-center">
+                        <div className="p-6 pb-0 text-center">
                             <img className="mx-auto -mt-12 mb-8 w-12 h-12 bg-[#FFEAD6] rounded-full p-2 text-gray-400 dark:text-gray-200" src={bidifyLogo} alt="logo" />
                             <h3 className="mb-5 text-xl font-medium text-[#F09132] ">Congratulations on your newly Minted NFT</h3>
-                            <a href={`${explorer[chainId]}/tx/${transaction}`} target="_blank" rel="noreferrer"  className="self-center mt-4 text-white bg-[#e48b24] hover:bg-[#f7a531] focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-8 mx-auto py-2.5 text-center">
+                            <a href={`${explorer[chainId]}/tx/${transaction}`} target="_blank" rel="noreferrer" className="self-center mt-4 text-white bg-[#e48b24] hover:bg-[#f7a531] focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-8 mx-auto py-2.5 text-center">
                                 View Transaction
                             </a>
                             <img className={`mt-8 min-w-[240px] max-w-[240px] mx-auto rounded-lg ${buffer ? "" : "animate-pulse"}`} src={buffer ? `data:${type};base64,${buffer.toString('base64')}` : preview} alt="preview" />
                             <p className="text-xl mt-4 font-bold tracking-tight break-words text-[#AA5E0D]">{name}</p>
                             <div className="mt-6 flex gap-3 items-center justify-center">
                                 <p className="text-[#F09132]">Share with the world</p>
-                                <a href={`https://twitter.com/intent/tweet?url=${explorer[chainId]}/tx/${transaction}&text=Check%20out%20the%20new%20NFT%20I%27ve%20minted%20called%20${name}`}><img src={tweeter} alt="social" /></a>
-                                <a href={`https://www.facebook.com/sharer/sharer.php?u=${explorer[chainId]}/tx/${transaction}&quote=Check%20out%20the%20new%20NFT%20I%27ve%20minted%20called%20${name}`}><img src={facebook} alt="social" /></a>
-                                <a href={`https://t.me/share/url?url=${explorer[chainId]}/tx/${transaction}&text=Check%20out%20the%20new%20NFT%20I%27ve%20minted%20called%20${name}`}><img src={instagram} alt="social" /></a>
+                                <a href={`https://twitter.com/intent/tweet?url=${explorer[chainId]}/tx/${transaction}&text=Please%20check%20out%20this%20${NETWORKS[chainId]?.label}%20NFT%20I%20just%20minted%20on%20mint.bidify.org`}><img src={tweeter} alt="social" /></a>
+                                {/* Please%20check%20out%20this%20${NETWORKS[chainId].label}%20NFT%20I%20just%20minted%20on%20mint.bidify.org */}
+                                <a href={`https://www.facebook.com/sharer/sharer.php?u=${explorer[chainId]}/tx/${transaction}&quote=Please%20check%20out%20this%20${NETWORKS[chainId]?.label}%20NFT%20I%20just%20minted%20on%20mint.bidify.org`}><img src={facebook} alt="social" /></a>
+                                <a href={`https://t.me/share/url?url=${explorer[chainId]}/tx/${transaction}&text=Please%20check%20out%20this%20${NETWORKS[chainId]?.label}%20NFT%20I%20just%20minted%20on%20mint.bidify.org`}><img src={telegram} alt="social" /></a>
                             </div>
+                        </div>
+
+                        <div className="flex flex-col border border-transparent border-t-slate-400 border-t-1 mt-2 py-2">
+                            <button className="self-center text-[#e48b24] fill-[#e48b24] hover:text-[#f7a531] hover:fill-[#f7a531] focus:ring-2 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-8 mx-auto py-2.5 text-center flex items-center" onClick={() => setExpand((value) => !value)}>
+                                {!expand ? "Expand" : "Hide"}
+                                {!expand ?
+                                    <svg viewBox="0 0 24 24" color="text" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M8.11997 9.29006L12 13.1701L15.88 9.29006C16.27 8.90006 16.9 8.90006 17.29 9.29006C17.68 9.68006 17.68 10.3101 17.29 10.7001L12.7 15.2901C12.31 15.6801 11.68 15.6801 11.29 15.2901L6.69997 10.7001C6.30997 10.3101 6.30997 9.68006 6.69997 9.29006C7.08997 8.91006 7.72997 8.90006 8.11997 9.29006Z"></path></svg> :
+                                    <svg viewBox="0 0 24 24" color="text" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M8.11997 14.7101L12 10.8301L15.88 14.7101C16.27 15.1001 16.9 15.1001 17.29 14.7101C17.68 14.3201 17.68 13.6901 17.29 13.3001L12.7 8.7101C12.31 8.3201 11.68 8.3201 11.29 8.7101L6.69997 13.3001C6.30997 13.6901 6.30997 14.3201 6.69997 14.7101C7.08997 15.0901 7.72997 15.1001 8.11997 14.7101Z"></path></svg>
+                                }
+                            </button>
+                            {expand && <div className="flex w-full gap-6 justify-between px-6 py-2 flex-col sm:flex-row">
+                                <div className="flex flex-col items-start gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <p className="text-[#e48b24]">Follow our socials:</p>
+                                        <a href="https://twitter.com/Crypto_SI" target="_blank" rel="noreferrer">
+                                            <img className="w-[24px]" src={tweeter} alt="social" />
+                                        </a>
+                                        <a href="https://www.instagram.com/cryptosi.eth" target="_blank" rel="noreferrer">
+                                            <img className="w-[24px]" src={instagram} alt="social" />
+                                        </a>
+                                        <a href="https://www.youtube.com/channel/UCcOzf3f6ZWVlIu-6qQpjudA" target="_blank" rel="noreferrer">
+                                            <img className="w-[28px]" src={youtube} alt="social" />
+                                        </a>
+                                    </div>
+                                    <a className="flex items-center text-white bg-[#e48b24] hover:bg-[#f7a531] focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-4 py-2 text-center" href="https://discord.bidify.org" target="_blank" rel="noreferrer"><img className="mt-1 w-[28px]" src={discord} alt="social" />Join our Discord</a>
+                                </div>
+                                <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
+                                    <p className="text-[#e48b24] h-[28px]">Join our email list for future update</p>
+                                    <MailchimpSubscribe
+                                        url={postUrl}
+                                        render={({ subscribe, status, message }) => (
+                                            <CustomForm
+                                                status={status}
+                                                message={message}
+                                                onValidated={formData => subscribe(formData)}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                            </div>}
                         </div>
                     </div>
                 </div>
@@ -657,15 +700,15 @@ export const Home = () => {
                 <img className="max-h-[40px] sm:max-h-[75px]" src={getLogo()} alt="logo" />
                 <div className="flex my-0 sm:my-3 gap-0 sm:gap-4">
                     <div className="flex" ref={drop} id="network">
-                        {account && <button onClick={() => setOpen(open => !open)} id="dropdownButton" className="text-white bg-[#f78410] hover:bg-[#e48b24] focus:ring-[#f7b541] font-medium rounded-full text-sm mx-1 sm:pr-2 p-1 sm:pr-4 text-center inline-flex items-center dark:bg-[#f7a531] dark:hover:bg-[#f7b541] dark:focus:ring-[#f7b541]" type="button"><img className="rounded-full max-h-[30px] mr-0 sm:mr-2" src={supportedChainIds.includes(chainId) ? NETWORKS[chainId].image : disturb} alt="unsupported" /><p className="hidden sm:block">{supportedChainIds.includes(chainId) ? NETWORKS[chainId].label : "Unsupported chain"}</p></button>}
+                        {account && <button onClick={() => setOpen(open => !open)} id="dropdownButton" className="text-white bg-[#f78410] hover:bg-[#e48b24] focus:ring-[#f7b541] font-medium rounded-full text-sm mx-1 p-1 sm:pr-4 text-center inline-flex items-center dark:bg-[#f7a531] dark:hover:bg-[#f7b541] dark:focus:ring-[#f7b541]" type="button"><img className="rounded-full max-h-[30px] mr-0 sm:mr-2" src={supportedChainIds.includes(chainId) ? NETWORKS[chainId].image : disturb} alt="unsupported" /><p className="hidden sm:block">{supportedChainIds.includes(chainId) ? NETWORKS[chainId].label : "Unsupported chain"}</p></button>}
 
                         {/* <!-- Dropdown menu --> */}
                         {open && <div className="z-10 mr-2 text-base list-none bg-white absolute top-[65px] rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
                             <ul className="py-1" aria-labelledby="dropdownButton">
-                                {Object.keys(NETWORKS).map((networkId) => {
+                                {supportedChainIds.map((networkId) => {
                                     const network = NETWORKS[networkId]
                                     return (<li key={network.label}>
-                                        <span onClick={() => handleSwitchNetwork(networkId)} className="block cursor-pointer py-2 px-4 text-lg text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white flex items-center gap-2"><img className="max-h-[30px] rounded-full" src={network.image} alt={network.label} />{network.label}</span>
+                                        <span onClick={() => handleSwitchNetwork(networkId)} className="cursor-pointer py-2 px-4 text-lg text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white flex items-center gap-2"><img className="max-h-[30px] rounded-full" src={network.image} alt={network.label} />{network.label}</span>
                                     </li>)
                                 })}
                             </ul>
@@ -738,7 +781,7 @@ export const Home = () => {
                         {/* Collection */}
                         {advanced && <div className="flex gap-2 mt-4">
                             <div className="flex-col flex-grow">
-                                <label htmlFor="collection" className=" block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-1">Collection<img data-tooltip-target="tooltip-collection" className="w-[15px] h-[15px]" src={info} alt="info" /></label>
+                                <label htmlFor="collection" className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-1">Collection<img data-tooltip-target="tooltip-collection" className="w-[15px] h-[15px]" src={info} alt="info" /></label>
                                 <div id="tooltip-collection" role="tooltip" className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-[#e48b24] rounded-lg shadow-sm opacity-0 transition-opacity max-w-sm duration-300 tooltip dark:bg-gray-700">
                                     You may name your collection if you intend to mint multiple NFTs belonging to the same collection (Case Sensitive)
                                     <div className="tooltip-arrow" data-popper-arrow></div>
@@ -828,7 +871,7 @@ export const Home = () => {
                             {advanced ? "Mint Advanced NFT" : "Mint Standard NFT"}
                         </button>
 
-                        {loading && <div className="overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-0 z-50 justify-center items-center md:inset-0 h-modal w-full bg-[#0003] flex h-[100vh]" id="popup-modal">
+                        {loading && <div className="overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-0 z-50 justify-center items-center md:inset-0 w-full bg-[#0003] flex h-[100vh]" id="popup-modal">
                             <div className="relative px-4 w-full max-w-md h-auto">
                                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                     <div className="p-6 pt-16 pb-8 text-center">

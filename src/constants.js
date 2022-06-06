@@ -5,7 +5,9 @@ import egem from "./assets/images/egem.png"
 import bnb from "./assets/images/bnb.png"
 import gnosis from "./assets/images/gnosis.png"
 import etc from "./assets/images/etc.png"
-import klaytn from "./assets/images/klaytn.png"
+// import klaytn from "./assets/images/klaytn.png"
+import evmos from "./assets/images/evmos.png"
+import moonriver from "./assets/images/moonriver.png"
 
 export const NetworkId = {
   POLYGON: 137,
@@ -17,10 +19,12 @@ export const NetworkId = {
   BSC: 56,
   GNOSIS: 100,
   ETC: 61,
-  KLAYTN: 8217
+  KLAYTN: 8217,
+  EVMOS: 9001,
+  MOONRIVER: 1285
   // FUJI: 43113,
 };
-export const supportedChainIds = [4, 56, 137, 43114, 1987, 61, 100]
+export const supportedChainIds = [ 137, 56, 61, 100, 1987, 43114, 4, 1285, 9001]
 export const addresses = {
   [NetworkId.POLYGON]: "0x683F246253934862B86b042476837a5e9B91E326",
   [NetworkId.RINKEBY]: "0x0f79f4239F343fc932F357eFAAeE405a90d28e42",
@@ -28,7 +32,9 @@ export const addresses = {
   [NetworkId.AVALANCHE]: "0x0a8D5435a43c8d63b47D6E61F5eE88868A1b8Ed9",
   [NetworkId.BSC]: "0x57aa9274d64185A77DAde4c104A49eD52C9D42Af",
   [NetworkId.GNOSIS]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-  [NetworkId.ETC]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047"
+  [NetworkId.ETC]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
+  [NetworkId.EVMOS]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
+  [NetworkId.MOONRIVER]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
 };
 export const standard = {
   [NetworkId.POLYGON]: "0x78A46265BedEfF1f18C3696dB01669A76B7833C8",
@@ -37,7 +43,9 @@ export const standard = {
   [NetworkId.AVALANCHE]: "0x0603347E9f803D28b59B8346480b1a43a11eE100",
   [NetworkId.BSC]: "0xCE387EEAD4bf81D5665EacBC457CcAea51955863",
   [NetworkId.GNOSIS]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
-  [NetworkId.ETC]: "0xCbd697f76e90435Dce788ce14e096f732803fA71"
+  [NetworkId.ETC]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
+  [NetworkId.MOONRIVER]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
+  [NetworkId.EVMOS]: "0xCbd697f76e90435Dce788ce14e096f732803fA71"
 }
 // export const platforms = {
 //   [NetworkId.POLYGON]: "0x175bc1bACF1fc054A5CA30AdeC155f00AaA2ce06",
@@ -52,13 +60,15 @@ export const explorer = {
   [NetworkId.AVALANCHE]: "https://snowtrace.io/",
   [NetworkId.BSC]: "https://bscscan.com/",
   [NetworkId.GNOSIS]: "https://blockscout.com/xdai/mainnet/",
-  [NetworkId.ETC]: "https://blockscout.com/etc/mainnet/"
+  [NetworkId.ETC]: "https://blockscout.com/etc/mainnet/",
+  [NetworkId.MOONRIVER]: "https://moonriver.moonscan.io",
+  [NetworkId.EVMOS]: "https://evm.evmos.org/"
 }
 
 /**
  * Network details required to add a network to a user's wallet, as defined in EIP-3085 (https://eips.ethereum.org/EIPS/eip-3085)
  */
-
+// export const netOrder = [ 137, 56, 61, 100, 1987, 43114, 4, 1285, 9001]
 export const NETWORKS = {
   [NetworkId.POLYGON]: {
     image: matic,
@@ -75,21 +85,6 @@ export const NETWORKS = {
   //   label: "Ethereum",
   //   chainId: 1
   // },
-  [NetworkId.RINKEBY]: {
-    image: eth,
-    label: "Rinkeby",
-    chainId: 4
-  },
-  [NetworkId.ETHERGEM]: {
-    image: egem,
-    label: "Ethergem",
-    chainId: 1987
-  },
-  [NetworkId.AVALANCHE]: {
-    image: avax,
-    label: "Avalanche",
-    chainId: 43114
-  },
   [NetworkId.BSC]: {
     image: bnb,
     label: "Binance Smart Chain",
@@ -105,6 +100,31 @@ export const NETWORKS = {
     label: "Gnosis Chain",
     chainId: 100
   },
+  [NetworkId.ETHERGEM]: {
+    image: egem,
+    label: "Ethergem",
+    chainId: 1987
+  },
+  [NetworkId.AVALANCHE]: {
+    image: avax,
+    label: "Avalanche",
+    chainId: 43114
+  },
+  [NetworkId.RINKEBY]: {
+    image: eth,
+    label: "Rinkeby",
+    chainId: 4
+  },
+  [NetworkId.MOONRIVER]: {
+    image: moonriver,
+    label: "Moonriver",
+    chainId: 1285
+  },
+  [NetworkId.EVMOS]: {
+    image: evmos,
+    label: "Evmos",
+    chainId: 9001
+  }
   // [NetworkId.KLAYTN]: {
   //   image: klaytn,
   //   label: "Klaytn Mainnet",
