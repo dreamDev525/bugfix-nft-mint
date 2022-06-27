@@ -117,7 +117,7 @@ export const Home = () => {
     const getSymbol = () => {
         // if(chainId === undefined) return ethLogo
         switch (chainId) {
-            case 1: case 4:
+            case 1: case 4: case 10: case 42161:
                 return "ETH"
             case 1987:
                 return "EGEM"
@@ -473,7 +473,7 @@ export const Home = () => {
             }
             console.log(txHash.events)
             let tokenIds = []
-            if (chainId === 4 || chainId === 43114 || chainId === 56 || chainId === 100 || chainId === 61 || chainId === 1285 || chainId === 9001) {
+            if (chainId === 4 || chainId === 43114 || chainId === 56 || chainId === 100 || chainId === 61 || chainId === 1285 || chainId === 9001 || chainId === 10 || chainId === 42161) {
                 tokenIds = txHash.events.map((event) => {
                     const hex = event.topics[3]
                     return Number(ethers.utils.hexValue(hex))
@@ -540,13 +540,13 @@ export const Home = () => {
             if (collections[i].name === collectionName) {
                 exist = true;
                 setSymbol(collections[i].symbol)
-                if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217) setErc721(collections[i].platform)
-                if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217) checkAllowd(collections[i].platform)
+                if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217 || chainId !== 10 || chainId !== 42161) setErc721(collections[i].platform)
+                if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217 || chainId !== 10 || chainId !== 42161) checkAllowd(collections[i].platform)
             }
         }
         if (exist) {
             setSymbolEditable(false)
-            if (chainId === 56 || chainId === 61 || chainId === 100 || chainId === 8217) setForSale(false)
+            if (chainId === 56 || chainId === 61 || chainId === 100 || chainId === 8217 || chainId === 10 || chainId === 42161) setForSale(false)
         }
         else {
             setSymbolEditable(true)
@@ -562,7 +562,7 @@ export const Home = () => {
         setOpenCollection(false)
         setCollectionName(item.name)
         setSymbol(item.symbol)
-        if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217) setErc721(item.platform)
+        if (chainId !== 56 || chainId !== 61 || chainId !== 100 || chainId !== 8217 || chainId !== 10 || chainId !== 42161) setErc721(item.platform)
     }
     const handleDismiss = () => {
         setBuffer(null)

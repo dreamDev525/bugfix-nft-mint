@@ -21,10 +21,12 @@ export const NetworkId = {
   ETC: 61,
   KLAYTN: 8217,
   EVMOS: 9001,
-  MOONRIVER: 1285
+  MOONRIVER: 1285,
+  ARBITRUM: 42161,
+  OPTIMISM: 10
   // FUJI: 43113,
 };
-export const supportedChainIds = [ 137, 56, 61, 100, 1987, 43114, 4, 1285, 9001]
+export const supportedChainIds = [ 137, 56, 61, 100, 1987, 43114, 4, 1285, 9001, 42161, 10]
 export const addresses = {
   [NetworkId.POLYGON]: "0x683F246253934862B86b042476837a5e9B91E326",
   [NetworkId.RINKEBY]: "0x0f79f4239F343fc932F357eFAAeE405a90d28e42",
@@ -35,6 +37,8 @@ export const addresses = {
   [NetworkId.ETC]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
   [NetworkId.EVMOS]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
   [NetworkId.MOONRIVER]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
+  [NetworkId.ARBITRUM]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
+  [NetworkId.OPTIMISM]: "0x04Fe964916B24deb3C2D7E6A8d9873b054E52492"
 };
 export const standard = {
   [NetworkId.POLYGON]: "0x78A46265BedEfF1f18C3696dB01669A76B7833C8",
@@ -45,7 +49,9 @@ export const standard = {
   [NetworkId.GNOSIS]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
   [NetworkId.ETC]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
   [NetworkId.MOONRIVER]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
-  [NetworkId.EVMOS]: "0xCbd697f76e90435Dce788ce14e096f732803fA71"
+  [NetworkId.EVMOS]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
+  [NetworkId.ARBITRUM]: "0xCbd697f76e90435Dce788ce14e096f732803fA71",
+  [NetworkId.OPTIMISM]: "0xC254F215840EB03Ef7ff7E2707CB5787d529579a"
 }
 // export const platforms = {
 //   [NetworkId.POLYGON]: "0x175bc1bACF1fc054A5CA30AdeC155f00AaA2ce06",
@@ -62,7 +68,9 @@ export const explorer = {
   [NetworkId.GNOSIS]: "https://blockscout.com/xdai/mainnet/",
   [NetworkId.ETC]: "https://blockscout.com/etc/mainnet/",
   [NetworkId.MOONRIVER]: "https://moonriver.moonscan.io",
-  [NetworkId.EVMOS]: "https://evm.evmos.org/"
+  [NetworkId.EVMOS]: "https://evm.evmos.org/",
+  [NetworkId.ARBITRUM]: "https://arbiscan.io/",
+  [NetworkId.OPTIMISM]: "https://optimistic.etherscan.io/"
 }
 
 /**
@@ -124,6 +132,16 @@ export const NETWORKS = {
     image: evmos,
     label: "Evmos",
     chainId: 9001
+  },
+  [NetworkId.ARBITRUM]: {
+    image: "https://bridge.arbitrum.io/images/Arbitrum_Symbol_-_Full_color_-_White_background.svg",
+    label: "Arbitrum",
+    chainId: 42161
+  },
+  [NetworkId.OPTIMISM]: {
+    image: "https://assets-global.website-files.com/611dbb3c82ba72fbc285d4e2/611fd32ddac3c1856c306c37_optimism%20logo%20icon.svg",
+    label: "Optimism",
+    chainId: 10
   }
   // [NetworkId.KLAYTN]: {
   //   image: klaytn,
