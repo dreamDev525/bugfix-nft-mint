@@ -28,17 +28,17 @@ export const NetworkId = {
 };
 export const supportedChainIds = [ 137, 56, 61, 100, 1987, 43114, 4, 1285, 9001, 42161, 10]
 export const addresses = {
-  [NetworkId.POLYGON]: "0x683F246253934862B86b042476837a5e9B91E326",
-  [NetworkId.RINKEBY]: "0x0f79f4239F343fc932F357eFAAeE405a90d28e42",
-  [NetworkId.ETHERGEM]: "0x5A4Aa5B8f54763A22A7bE54F30Be650fe040b8eA",
-  [NetworkId.AVALANCHE]: "0x0a8D5435a43c8d63b47D6E61F5eE88868A1b8Ed9",
-  [NetworkId.BSC]: "0x57aa9274d64185A77DAde4c104A49eD52C9D42Af",
-  [NetworkId.GNOSIS]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-  [NetworkId.ETC]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-  [NetworkId.EVMOS]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-  [NetworkId.MOONRIVER]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-  [NetworkId.ARBITRUM]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-  [NetworkId.OPTIMISM]: "0x04Fe964916B24deb3C2D7E6A8d9873b054E52492"
+  [NetworkId.POLYGON]: "0x683F246253934862B86b042476837a5e9B91E326", //verified
+  [NetworkId.RINKEBY]: "0x0f79f4239F343fc932F357eFAAeE405a90d28e42", //verified
+  [NetworkId.ETHERGEM]: "0x5A4Aa5B8f54763A22A7bE54F30Be650fe040b8eA", //
+  [NetworkId.AVALANCHE]: "0x0a8D5435a43c8d63b47D6E61F5eE88868A1b8Ed9", //verified
+  [NetworkId.BSC]: "0x57aa9274d64185A77DAde4c104A49eD52C9D42Af", //verified
+  [NetworkId.GNOSIS]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047", //verified
+  [NetworkId.ETC]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047", //verified
+  [NetworkId.EVMOS]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047", //verified
+  [NetworkId.MOONRIVER]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047", //verified
+  [NetworkId.ARBITRUM]: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047", //verified
+  [NetworkId.OPTIMISM]: "0x04Fe964916B24deb3C2D7E6A8d9873b054E52492" //verified
 };
 export const standard = {
   [NetworkId.POLYGON]: "0x78A46265BedEfF1f18C3696dB01669A76B7833C8",
@@ -60,17 +60,17 @@ export const standard = {
 //   [NetworkId.AVALANCHE]: "0x0c11e7AC0864624e22935748ea092A27bD7B4924"
 // }
 export const explorer = {
-  [NetworkId.POLYGON]: "https://polygonscan.com/",
+  [NetworkId.POLYGON]: "https://polygonscan.com",
   [NetworkId.RINKEBY]: "https://rinkeby.etherscan.io",
-  [NetworkId.ETHERGEM]: "https://blockscout.egem.io/",
-  [NetworkId.AVALANCHE]: "https://snowtrace.io/",
-  [NetworkId.BSC]: "https://bscscan.com/",
-  [NetworkId.GNOSIS]: "https://blockscout.com/xdai/mainnet/",
-  [NetworkId.ETC]: "https://blockscout.com/etc/mainnet/",
+  [NetworkId.ETHERGEM]: "https://blockscout.egem.io",
+  [NetworkId.AVALANCHE]: "https://snowtrace.io",
+  [NetworkId.BSC]: "https://bscscan.com",
+  [NetworkId.GNOSIS]: "https://xdai.tokenview.com/en", //"https://blockscout.com/xdai/mainnet/",
+  [NetworkId.ETC]: "https://etc.tokenview.com/en", //"https://blockscout.com/etc/mainnet/",
   [NetworkId.MOONRIVER]: "https://moonriver.moonscan.io",
-  [NetworkId.EVMOS]: "https://evm.evmos.org/",
-  [NetworkId.ARBITRUM]: "https://arbiscan.io/",
-  [NetworkId.OPTIMISM]: "https://optimistic.etherscan.io/"
+  [NetworkId.EVMOS]: "https://evm.evmos.org",
+  [NetworkId.ARBITRUM]: "https://arbiscan.io",
+  [NetworkId.OPTIMISM]: "https://optimistic.etherscan.io"
 }
 
 /**
