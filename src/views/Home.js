@@ -11,6 +11,7 @@ import facebook from "../assets/images/facebook.png"
 import instagram from "../assets/images/instagram.png"
 import discord from "../assets/images/discord.png"
 import youtube from "../assets/images/youtube.png"
+import auction from "../assets/images/auction.png"
 
 import { useWeb3React } from "@web3-react/core"
 import { FetchWrapper } from "use-nft";
@@ -34,7 +35,7 @@ const modalContents = {
     database: "Adding to database...",
     list: "Creating Auctions... \nThis will take a few minutes and you should to confirm transactions several times."
 }
-const transackLogo = "https://www.gitbook.com/cdn-cgi/image/width=40,height=40,fit=contain,dpr=1.25,format=auto/https%3A%2F%2F2568214732-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FyKT7ulakWzij4PDiIp6U%252Ficon%252FTbk5OkyEAiidHiC1yXpm%252FsK_Kgoxa_400x400.jpeg%3Falt%3Dmedia%26token%3Dacdf28e9-2036-4d48-93ce-dbd0eb6f5714"
+// const transackLogo = "https://www.gitbook.com/cdn-cgi/image/width=40,height=40,fit=contain,dpr=1.25,format=auto/https%3A%2F%2F2568214732-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FyKT7ulakWzij4PDiIp6U%252Ficon%252FTbk5OkyEAiidHiC1yXpm%252FsK_Kgoxa_400x400.jpeg%3Falt%3Dmedia%26token%3Dacdf28e9-2036-4d48-93ce-dbd0eb6f5714"
 
 
 export const Home = () => {
@@ -108,7 +109,9 @@ export const Home = () => {
         await switchNetwork(Number(id))
     }
     useEffect(() => {
-        handleConnect()
+        return setTimeout(() => {
+            handleConnect()
+        }, 500)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const getLogo = () => {
@@ -184,18 +187,12 @@ export const Home = () => {
     const addToDatabase = async (data, forSale) => {
         try {
             if (forSale) {
-                console.log("posting for sale...")
-                const ret = await axios.post(`${baseUrl}/admin`, data)
-                console.log("return", ret)
+                await axios.post(`${baseUrl}/admin`, data)
             } else {
-                console.log("posting for minting...")
-                const ret = await axios.post(`${baseUrl}/adminCollection`, data)
-                console.log("return", ret)
+                await axios.post(`${baseUrl}/adminCollection`, data)
             }
         } catch (error) {
-
             setToast(error.message)
-            return console.log("adding database error", error)
         }
     }
     const list = async (token, price, days) => {
@@ -389,7 +386,6 @@ export const Home = () => {
         if (library) {
             const getCost = async () => {
                 if (amount) {
-                    console.log(amount)
                     const signer = library.getSigner()
                     const BidifyMinter = new ethers.Contract(addresses[chainId], ABI, signer)
                     const mintCost = await BidifyMinter.calculateCost(amount)
@@ -401,7 +397,7 @@ export const Home = () => {
             getData()
         }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [amount, library, chainId])
 
     const getData = async () => {
@@ -410,7 +406,6 @@ export const Home = () => {
 
             const BidifyMinter = new ethers.Contract(addresses[chainId], ABI, signer)
             const collections = await BidifyMinter.getCollections()
-            console.log("collections ", collections)
             setCollections(collections)
         } catch (e) {
             setToast(e.message)
@@ -418,7 +413,6 @@ export const Home = () => {
         }
     }
     const onSubmit = async () => {
-        // return console.log(buffer, name, description, collectionName, symbol)
         if (buffer === undefined || name === undefined || description === undefined || (advanced && (collectionName === '' || symbol === ''))) {
             setToast("Fields cannot be empty")
             return console.log("Fields cannot be empty")
@@ -458,20 +452,14 @@ export const Home = () => {
             }
             let exist = platform === ethers.constants.AddressZero ? false : true
             if (!advanced) exist = true
-            // return console.log(exist)
             const mintCost = await BidifyMinter.calculateCost(amount)
-            // return console.log(advanced)
             const tx = await BidifyMinter.mint(tokenURIJson.toString(), amount, advanced ? collectionName : "Standard BidifyMint Nft", advanced ? symbol : "SBN", advanced ? platform : standard[chainId], { value: mintCost, from: account })
             const txHash = await tx.wait()
             // await signList()
             setTransaction(txHash.transactionHash)
-            // console.log(txHash)
-            console.log(txHash)
             if (!exist) {
                 txHash.events.shift()
-                // if(!advanced)txHash.logs.shift()
             }
-            console.log(txHash.events)
             let tokenIds = []
             if (chainId === 4 || chainId === 43114 || chainId === 56 || chainId === 100 || chainId === 61 || chainId === 1285 || chainId === 9001 || chainId === 10 || chainId === 42161) {
                 tokenIds = txHash.events.map((event) => {
@@ -492,7 +480,6 @@ export const Home = () => {
                 }
             }
 
-            console.log("tokenIds", tokenIds)
             if (forSale) {
                 setModalContent("list");
 
@@ -503,7 +490,6 @@ export const Home = () => {
                 while (await getLogs() === totalCount) {
                     console.log("while loop: delaying")
                 }
-                console.log("end of loop")
                 setModalContent("database")
                 const pData = []
                 for (let i = 0; i < tokenIds.length; i++) {
@@ -511,7 +497,6 @@ export const Home = () => {
                     pData.push(listingDetail)
                 }
                 const data = await Promise.all(pData);
-                console.log("listed data", data)
                 await addToDatabase(data, forSale)
             }
             else {
@@ -555,8 +540,8 @@ export const Home = () => {
             setApproved(false)
             setForSale(false)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [collectionName, chainId ])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [collectionName, chainId])
     const handleSelectCollection = (item) => {
         setSymbolEditable(false)
         setOpenCollection(false)
@@ -688,13 +673,21 @@ export const Home = () => {
     }
     return (
         <div>
-            <div className="z-[9999] fixed h-12 w-12 right-[30px] bottom-[50px] flex items-center justify-center">
+            {/* <div className="z-[9999] fixed h-12 w-12 right-[30px] bottom-[50px] flex items-center justify-center">
                 <span className="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-sky-400"></span>
                 <span className="relative inline-flex w-12 h-12 rounded-full bg-sky-500">
                     <a href={process.env.REACT_APP_TRANSACK_URL} target="_blank" rel="noreferrer">
                         <img className="rounded-full" src={transackLogo} alt="transack logo" />
                     </a>
                 </span>
+            </div> */}
+            <div className="z-[9999] md:hidden fixed gap-3 right-[20px] bottom-[50px] flex flex-col items-center">
+                <a href="https://app.bidify.org" target="_blank" rel="noreferrer" className="items-center gap-1 p-3 text-lg font-medium text-white bg-[#f78410] rounded-full flex">
+                    <img className="h-[30px] w-[30px] invert" src={auction} alt='auction' />
+                </a>
+                <a className="flex gap-2 items-center p-3 rounded-full bg-[#f78410]" href="https://youtu.be/QnmIbgLfC1Y" target="_blank" rel="noreferrer">
+                    <svg className="h-[30px] w-[30px]" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+                </a>
             </div>
             {/* <span className="flex w-3 h-3">
                 
@@ -723,9 +716,15 @@ export const Home = () => {
             <div className="bg-gradient-to-r from-[#e48b24] to-[#85623a] flex items-center justify-between px-4 pt-6 md:pt-24 pb-1 md:pb-0">
                 <div className="flex flex-col items-start ml-12">
                     <span className="text-white text-4xl font-bold max-w-[650px] leading-normal lg:block hidden">Mint and List Nfts on Multiple Network</span>
-                    <a href="https://app.bidify.org" target="_blank" rel="noreferrer" className="items-center hidden gap-1 px-6 py-4 mt-4 mb-12 text-lg font-medium text-white bg-black rounded-lg sm:flex hover:bg-gray-700">Explore Marketplace
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                    </a>
+                    <div className="flex items-center gap-3">
+                        <a href="https://app.bidify.org" target="_blank" rel="noreferrer" className="items-center hidden gap-1 px-6 py-4 mt-4 mb-12 text-lg font-medium text-white bg-black rounded-lg md:flex hover:bg-gray-700">Explore Marketplace
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        <a className="hidden md:flex gap-2 mt-4 mb-12 items-center px-3 py-[10px] rounded-lg hover:bg-[#ffffff33]" href="https://youtu.be/QnmIbgLfC1Y" target="_blank" rel="noreferrer">
+                            <svg className="h-[40px] w-[40px]" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+                            <p className="text-lg font-medium">Watch Video</p>
+                        </a>
+                    </div>
                 </div>
                 <img className="min-w-[100px] lg:min-w-[400px] mb-12 mr-12 non-movable" src={bannerImg} alt="hero" />
             </div>
@@ -753,6 +752,9 @@ export const Home = () => {
                             </div>
                         </div>
                         <p className="mt-4 self-center sm:hidden text-[#e48b24] flex items-center gap-1">fee = {Number(cost) > 0 ? `${ethers.utils.formatEther(cost)} ${getSymbol()}` : 'N/A'}<img data-tooltip-target="tooltip-fee" className="w-[15px] h-[15px]" src={info} alt="info" /></p>
+                        {chainId !== undefined && <label className="sm:hidden block mt-3 text-sm text-center font-medium text-gray-900 dark:text-gray-300">
+                            You don't have any {getSymbol(chainId)}? <a className="text-[#e48b24]" href={process.env.REACT_APP_TRANSACK_URL} rel="noopener noreferrer" target="_blank" >Buy Crypto</a>
+                        </label>}
                         <button type="submit" className={`flex sm:hidden items-center justify-center self-center w-3/4 mt-4 text-white focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-12 py-2.5 text-center dark:bg-[#f7a531] dark:hover:bg-[#f7b541] dark:focus:ring-[#f7b541] ${agree && !loading ? 'bg-[#e48b24] hover:bg-[#f7a531]' : 'pointer-events-none bg-gray-500'}`} onClick={onSubmit} >
                             {loading && <svg role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
@@ -873,6 +875,9 @@ export const Home = () => {
                             This fee does not include the network fee, which is usually very small (except eth), the final fee will be displayed in your metamask
                             <div className="tooltip-arrow" data-popper-arrow></div>
                         </div>
+                        {chainId !== undefined && <label className="mt-3 text-sm sm:block hidden text-center font-medium text-gray-900 dark:text-gray-300">
+                            You don't have any {getSymbol(chainId)}? <a className="text-[#e48b24]" href={process.env.REACT_APP_TRANSACK_URL} rel="noopener noreferrer" target="_blank" >Buy Crypto</a>
+                        </label>}
                         <button type="submit" className={`hidden sm:flex items-center justify-center self-center w-3/4 mt-2 text-white  focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-12 py-2.5 text-center dark:bg-[#f7a531] dark:hover:bg-[#f7b541] dark:focus:ring-[#f7b541] ${agree && !loading ? 'bg-[#e48b24] hover:bg-[#f7a531]' : 'pointer-events-none bg-gray-500'}`} onClick={onSubmit}>
                             {loading && <svg role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
