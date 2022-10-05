@@ -134,7 +134,7 @@ export const NETWORKS = {
     chainId: 9001
   },
   [NetworkId.ARBITRUM]: {
-    image: "https://bridge.arbitrum.io/images/Arbitrum_Symbol_-_Full_color_-_White_background.svg",
+    image: "https://bridge.arbitrum.io/logo.png",
     label: "Arbitrum",
     chainId: 42161
   },
@@ -749,21 +749,19 @@ export const ERC721_ABI = [
 
 export const BIDIFY = {
   address: {
-    1: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-    3: "0xd0b5Ad6E34f06278fe0f536660cABc081F3dAc90",
-    4: "0x55Ae9152fc35ab804Ad78d099169499CcF00d02b",  //new deployed contract
-    // 4: "0x683f246253934862b86b042476837a5e9b91e326",
-    5: "0xB0a6fc9ab6Ae98B0eCD60d24F79F2504c8389165",
-    42: "0xE3Af2cf2729b5fb8339aF5F0aBEd3fbfAE095E47",
-    // 1987: "0xC0678f9CD68A91a348C4fa2B79e1e556FAb8C135" // 1 day contract
-    // 1987: "0xB5e5Ac4829fF769981b10A258A210abe71BdDCa1"    // 10 minutes contract
-    1987: "0xaD83C196cb16793E0bDd22a7Eb157cAd08e9AdeB",    // fixed fees
-    43113: "0x3E1E45661B58d1485831AffBD51C2d33258e85Fe",
-    43114: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-    137: "0x86E25f1e266eA4831b3CBb68164753DcbA30D047",
-    80001: "0x0b3A202C14595b67c3E98c27C636e7f3853Cafa3",
+    [NetworkId.RINKEBY]: "0xE9f8f0267342c4b9e65C7Bc14c1b33877e10C817", //new tested
+    [NetworkId.ETHERGEM]: "0x159f569E2c35C7B5B601D222AFafc90edD23E1f9", //new tested
+    [NetworkId.AVALANCHE]: "0xED002B4F0b3167E9096F6f4674c18433dca96518", //new tested
+    [NetworkId.POLYGON]: "0x2FccEd65EeC83Bf2790bBc046013e13d6498038C", //new tested
+    [NetworkId.GNOSIS]: "0xcA592ed60C20085217C4529CF75638A0d71F1F02", //new tested
+    [NetworkId.ETC]: "0xD4e83E1Fc9d88730CA63Aaaffef168811BFC6D14", //new tested
+    [NetworkId.EVMOS]: "0x1779ac6Dc323528DcC93aE8716211FC7dEDb4294", //new tested
+    [NetworkId.MOONRIVER]: "0xD4e83E1Fc9d88730CA63Aaaffef168811BFC6D14", //new tested
+    [NetworkId.BSC]: "0xA878b8eB62B4a25308CA75B0c89C718F1448B50F", //new tested
+    [NetworkId.OPTIMISM]: "",
+    [NetworkId.ARBITRUM]: "",
   },
-  "abi": [
+  abi: [
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -833,6 +831,12 @@ export const BIDIFY = {
           "internalType": "uint256",
           "name": "price",
           "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "referrer",
+          "type": "address"
         }
       ],
       "name": "Bid",
@@ -879,6 +883,12 @@ export const BIDIFY = {
         },
         {
           "indexed": false,
+          "internalType": "uint256",
+          "name": "endingPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
           "internalType": "uint8",
           "name": "timeInDays",
           "type": "uint8"
@@ -886,7 +896,7 @@ export const BIDIFY = {
         {
           "indexed": false,
           "internalType": "address",
-          "name": "referrer",
+          "name": "lister",
           "type": "address"
         }
       ],
@@ -919,32 +929,13 @@ export const BIDIFY = {
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "uint64",
           "name": "id",
           "type": "uint64"
         },
         {
           "internalType": "address",
-          "name": "marketplace",
+          "name": "referrer",
           "type": "address"
         },
         {
@@ -1009,18 +1000,18 @@ export const BIDIFY = {
               "type": "uint256"
             },
             {
+              "internalType": "uint256",
+              "name": "endingPrice",
+              "type": "uint256"
+            },
+            {
               "internalType": "address",
               "name": "referrer",
               "type": "address"
             },
             {
-              "internalType": "bool",
-              "name": "allowMarketplace",
-              "type": "bool"
-            },
-            {
               "internalType": "address",
-              "name": "marketplace",
+              "name": "lister",
               "type": "address"
             },
             {
@@ -1113,32 +1104,32 @@ export const BIDIFY = {
           "type": "uint256"
         },
         {
+          "internalType": "uint256",
+          "name": "endingPrice",
+          "type": "uint256"
+        },
+        {
           "internalType": "uint8",
           "name": "timeInDays",
           "type": "uint8"
         },
         {
-          "internalType": "address",
-          "name": "referrer",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "allowMarketplace",
-          "type": "bool"
-        },
-        {
           "internalType": "bool",
           "name": "isERC721",
           "type": "bool"
+        },
+        {
+          "internalType": "address",
+          "name": "lister",
+          "type": "address"
         }
       ],
       "name": "list",
       "outputs": [
         {
-          "internalType": "uint64",
+          "internalType": "uint256",
           "name": "",
-          "type": "uint64"
+          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
@@ -1338,19 +1329,6 @@ export const BIDIFY = {
         }
       ],
       "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "withdraw",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
