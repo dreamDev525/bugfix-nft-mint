@@ -17,7 +17,7 @@ import { useWeb3React } from "@web3-react/core"
 import { FetchWrapper } from "use-nft";
 import { injected } from "../connectors"
 import { switchNetwork } from "../wallet"
-import { addresses, ABI, NETWORKS, supportedChainIds, explorer, BIDIFY, getLogUrl, snowApi, baseUrl, ERC721_ABI, standard } from "../constants"
+import { addresses, ABI, NETWORKS, supportedChainIds, explorer, BIDIFY, getLogUrl, snowApi, baseUrl, ERC721_ABI, standard, URLS } from "../constants"
 import { ethers, Contract } from "ethers"
 import { Buffer } from "buffer"
 import axios from "axios"
@@ -159,7 +159,7 @@ export const Home = () => {
             "0x5424fbee1c8f403254bd729bf71af07aa944120992dfa4f67cd0e7846ef7b8de";
         let logs = [];
         try {
-            const ret = await axios.get(`${getLogUrl[chainId]}&fromBlock=0&toBlock=latest&address=${BIDIFY.address[chainId]}&topic0=${topic0}&apikey=${snowApi[chainId]}`)
+            const ret = await axios.get(`${getLogUrl[chainId]}&fromBlock=0&${chainId === 9001 || chainId === 100 || chainId === 61 ? 'toBlock=latest&' : ''}address=${BIDIFY.address[chainId]}&topic0=${topic0}&apikey=${snowApi[chainId]}`)
             logs = ret.data.result
         } catch (e) {
             setToast(e.message)
@@ -226,10 +226,17 @@ export const Home = () => {
         }
     }
     const getDetailFromId = async (id) => {
-        const detail = await getListingDetail(id)
-        const fetchedValue = await getFetchValues(detail)
-        return { ...fetchedValue, ...detail, network: chainId }
-
+        try {
+            console.log('checking get detail from id = 1')
+            const detail = await getListingDetail(id)
+            console.log('checking get detail from id = 2', detail)
+            const fetchedValue = await getFetchValues(detail)
+            console.log('checking get detail from id = 3', fetchedValue)
+            return { ...fetchedValue, ...detail, network: chainId }
+        } catch (e) {
+            console.log(e)
+            return null
+        }
     }
     const getListingDetail = async (id) => {
         const bidify = new ethers.Contract(BIDIFY.address[chainId], BIDIFY.abi, library.getSigner())
@@ -257,15 +264,15 @@ export const Home = () => {
         let marketplace = nullIfZeroAddress(raw.marketplace);
 
         let bids = [];
-        const topic1 = "0x" + id.toString(16).padStart(64, "0");
-        const ret = await axios.get(`${getLogUrl[chainId]}&fromBlock=0&toBlock=latest&topic0=0xdbf5dea084c6b3ed344cc0976b2643f2c9a3400350e04162ea3f7302c16ee914&topic0_1_opr=and&topic1=${topic1}&apikey=${snowApi[chainId]}`)
-        const logs = ret.data.result
-        for (let bid of logs) {
-            bids.push({
-                bidder: "0x" + bid.topics[2].substr(-40),
-                price: ethers.utils.formatEther(ethers.BigNumber.from(bid.data)),
-            });
-        }
+        // const topic1 = "0x" + id.toString(16).padStart(64, "0");
+        // const ret = await axios.get(`${getLogUrl[chainId]}&fromBlock=0&${chainId === 9001 || chainId === 100 ? 'toBlock=latest&' : ''}topic0=0xdbf5dea084c6b3ed344cc0976b2643f2c9a3400350e04162ea3f7302c16ee914&topic0_1_opr=and&topic1=${chainId === 9001 || chainId === 100 ? topic1.toLowerCase() : topic1}&apikey=${snowApi[chainId]}`)
+        // const logs = ret.data.result
+        // for (let bid of logs) {
+        //     bids.push({
+        //         bidder: "0x" + bid.topics[2].substr(-40),
+        //         price: ethers.utils.formatEther(ethers.BigNumber.from(bid.data)),
+        //     });
+        // }
         return {
             id,
             creator: raw.creator,
@@ -322,21 +329,9 @@ export const Home = () => {
                     "0c8149f8e63b4b818d441dd7f74ab618"
                 );
                 break;
-            case 1987:
-                provider = new ethers.providers.JsonRpcProvider("https://lb.rpc.egem.io")
-                break;
-            case 43113:
-                provider = new ethers.providers.JsonRpcProvider("https://api.avax-test.network/ext/bc/C/rpc")
-                break;
-            case 43114:
-                provider = new ethers.providers.JsonRpcProvider("https://api.avax.network/ext/bc/C/rpc")
-                break;
-            case 80001:
-                provider = new ethers.providers.JsonRpcProvider("https://matic-testnet-archive-rpc.bwarelabs.com")
-                break;
-            case 137:
-                provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com")
-                break;
+            case 1987: case 43114: case 137: case 56: case 9001: case 1285: case 61: case 100:
+                provider = new ethers.providers.JsonRpcProvider(URLS[chainId])
+                break
             default:
                 console.log("select valid chain");
         }
@@ -532,17 +527,26 @@ export const Home = () => {
                 setModalContent("list");
 
                 const totalCount = await getLogs()
+                if (totalCount > 0) {
+                    const latestDetail = await getDetailFromId((totalCount - 1).toString());
+                    console.log(latestDetail)
+                }
+                console.log(tokenIds, totalCount)
                 for (let i = 0; i < tokenIds.length; i++) {
                     await list(tokenIds[i].toString(), bid, endingPrice, duration)
                 }
-                while (await getLogs() === totalCount) {
+                while (await getDetailFromId((totalCount + tokenIds.length - 1).toString()) === null) {
                     console.log("while loop: delaying")
                 }
                 setModalContent("database")
                 const pData = []
-                for (let i = 0; i < tokenIds.length; i++) {
-                    const listingDetail = getDetailFromId((i + totalCount).toString());
-                    pData.push(listingDetail)
+                try {
+                    for (let i = 0; i < tokenIds.length; i++) {
+                        const listingDetail = getDetailFromId((i + totalCount).toString());
+                        pData.push(listingDetail)
+                    }
+                } catch (e) {
+                    console.log(e.message ? e.message : e)
                 }
                 const data = await Promise.all(pData);
                 console.log("data from chain", data)
@@ -562,7 +566,7 @@ export const Home = () => {
             if (type === '') {
                 setType('none');
             }
-        } catch(err) {
+        } catch (err) {
             setToast(err.message)
             console.log("err", err)
             setLoading(false);
@@ -761,7 +765,7 @@ export const Home = () => {
                         <a href="https://app.bidify.org" target="_blank" rel="noreferrer" className="items-center hidden gap-1 px-6 py-4 mt-4 mb-12 text-lg font-medium text-white bg-black rounded-lg md:flex hover:bg-gray-700">Explore Marketplace
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
-                        <a className="hidden md:flex gap-2 mt-4 mb-12 items-center px-3 py-[10px] rounded-lg hover:bg-[#ffffff33]" href="https://youtu.be/QnmIbgLfC1Y" target="popup" onClick={() => window.open('https://youtu.be/QnmIbgLfC1Y','Watch Tutorial','width=800,height=600')} rel="noreferrer">
+                        <a className="hidden md:flex gap-2 mt-4 mb-12 items-center px-3 py-[10px] rounded-lg hover:bg-[#ffffff33]" href="https://youtu.be/QnmIbgLfC1Y" target="popup" onClick={() => window.open('https://youtu.be/QnmIbgLfC1Y', 'Watch Tutorial', 'width=800,height=600')} rel="noreferrer">
                             <svg className="h-[40px] w-[40px]" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
                             <p className="text-lg font-medium">Watch Tutorial</p>
                         </a>
@@ -794,7 +798,7 @@ export const Home = () => {
                         </div>
                         <p className="mt-4 self-center sm:hidden text-[#e48b24] flex items-center gap-1">fee = {Number(cost) > 0 ? `${ethers.utils.formatEther(cost)} ${getSymbol()}` : 'N/A'}<img data-tooltip-target="tooltip-fee" className="w-[15px] h-[15px]" src={info} alt="info" /></p>
                         {chainId !== undefined && <label className="block mt-3 text-sm font-medium text-center text-gray-900 sm:hidden dark:text-gray-300">
-                            You don't have any {getSymbol(chainId)}? <a className="text-[#e48b24]" href={process.env.REACT_APP_TRANSACK_URL} rel="noopener noreferrer" target="popup" onClick={() => window.open(process.env.REACT_APP_TRANSACK_URL,'Buy Token','width=800,height=600')} >Buy Crypto</a>
+                            You don't have any {getSymbol(chainId)}? <a className="text-[#e48b24]" href={process.env.REACT_APP_TRANSACK_URL} rel="noopener noreferrer" target="popup" onClick={() => window.open(process.env.REACT_APP_TRANSACK_URL, 'Buy Token', 'width=800,height=600')} >Buy Crypto</a>
                         </label>}
                         <button type="submit" className={`flex sm:hidden items-center justify-center self-center w-3/4 mt-4 text-white focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-12 py-2.5 text-center dark:bg-[#f7a531] dark:hover:bg-[#f7b541] dark:focus:ring-[#f7b541] ${agree && !loading ? 'bg-[#e48b24] hover:bg-[#f7a531]' : 'pointer-events-none bg-gray-500'}`} onClick={onSubmit} >
                             {loading && <svg role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -925,7 +929,7 @@ export const Home = () => {
                             <div className="tooltip-arrow" data-popper-arrow></div>
                         </div>
                         {chainId !== undefined && <label className="hidden mt-3 text-sm font-medium text-center text-gray-900 sm:block dark:text-gray-300">
-                            You don't have any {getSymbol(chainId)}? <a className="text-[#e48b24]" href={process.env.REACT_APP_TRANSACK_URL} rel="noopener noreferrer" target="popup" onClick={() => window.open(process.env.REACT_APP_TRANSACK_URL,'Buy Token','width=800,height=600')} >Buy Crypto</a>
+                            You don't have any {getSymbol(chainId)}? <a className="text-[#e48b24]" href={process.env.REACT_APP_TRANSACK_URL} rel="noopener noreferrer" target="popup" onClick={() => window.open(process.env.REACT_APP_TRANSACK_URL, 'Buy Token', 'width=800,height=600')} >Buy Crypto</a>
                         </label>}
                         <button type="submit" className={`hidden sm:flex items-center justify-center self-center w-3/4 mt-2 text-white  focus:ring-4 focus:ring-[#f7b541] font-medium rounded-lg text-sm px-12 py-2.5 text-center dark:bg-[#f7a531] dark:hover:bg-[#f7b541] dark:focus:ring-[#f7b541] ${agree && !loading ? 'bg-[#e48b24] hover:bg-[#f7a531]' : 'pointer-events-none bg-gray-500'}`} onClick={onSubmit}>
                             {loading && <svg role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

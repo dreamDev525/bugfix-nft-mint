@@ -1343,11 +1343,15 @@ export const BIDIFY = {
 export const baseUrl = "https://api.bidify.org/api"
 // export const baseUrl = "http://localhost:8080/api"
 export const getLogUrl = {
-  137: "https://api.polygonscan.com/api?module=logs&action=getLogs",
-  43114: "https://api.snowtrace.io/api?module=logs&action=getLogs",
-  4: "https://api-rinkeby.etherscan.io/api?module=logs&action=getLogs",
-  1987: "https://blockscout.egem.io/api?module=logs&action=getLogs",
-  56: "https://api.bscscan.com/api?module=logs&action=getLogs"
+  [NetworkId.POLYGON]: "https://api.polygonscan.com/api?module=logs&action=getLogs",
+  [NetworkId.AVALANCHE]: "https://api.snowtrace.io/api?module=logs&action=getLogs",
+  [NetworkId.RINKEBY]: "https://api-rinkeby.etherscan.io/api?module=logs&action=getLogs",
+  [NetworkId.ETHERGEM]: "https://blockscout.egem.io/api?module=logs&action=getLogs",
+  [NetworkId.BSC]: "https://api.bscscan.com/api?module=logs&action=getLogs",
+  [NetworkId.EVMOS]: "https://evm.evmos.org/api?module=logs&action=getLogs",
+  [NetworkId.MOONRIVER]: "https://api-moonriver.moonscan.io/api?module=logs&action=getLogs",
+  [NetworkId.GNOSIS]: "https://blockscout.com/xdai/mainnet/api?module=logs&action=getLogs",
+  [NetworkId.ETC]: "https://blockscout.com/etc/mainnet/api?module=logs&action=getLogs"
 }
 export const snowApi = {
   43114: "Y72B4EMH42SYS5C3RGGIDJM9HPQKYUSUTH",
@@ -1355,3 +1359,23 @@ export const snowApi = {
   4: "1GT2QR7K76T2EAU72UEP43M82W72TMQAU6",
   56: "WYSBB1UFVWFNRVRMCRZ6PMI5XD3K1D2A9F"
 }
+
+export const URLS = {
+  // 1: "https://mainnet.infura.io/v3/0c8149f8e63b4b818d441dd7f74ab618",
+  // 3: "https://ropsten.infura.io/v3/0c8149f8e63b4b818d441dd7f74ab618",
+  // 80001: "https://matic-testnet-archive-rpc.bwarelabs.com",
+  // 43113: "https://api.avax-test.network/ext/bc/C/rpc",
+  // 5: "https://goerli.infura.io/v3/0c8149f8e63b4b818d441dd7f74ab618",
+  [NetworkId.RINKEBY]: "https://rinkeby.infura.io/v3/0c8149f8e63b4b818d441dd7f74ab618",
+  [NetworkId.ETHERGEM]: "https://lb.rpc.egem.io",
+  [NetworkId.AVALANCHE]: "https://api.avax.network/ext/bc/C/rpc",
+  [NetworkId.POLYGON]: "https://polygon-rpc.com",
+  [NetworkId.GNOSIS]: "https://rpc.gnosischain.com",
+  [NetworkId.ETC]: "https://www.ethercluster.com/etc",
+  [NetworkId.EVMOS]: "https://eth.bd.evmos.org:8545",
+  [NetworkId.MOONRIVER]: "https://rpc.api.moonriver.moonbeam.network",
+  [NetworkId.BSC]: "https://bsc-dataseed1.binance.org",
+  [NetworkId.OPTIMISM]: "",
+  [NetworkId.ARBITRUM]: "",
+
+};
